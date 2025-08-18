@@ -27,7 +27,7 @@ export function Overview() {
       <div className="alert alert-info" style={{ backgroundColor: '#e3f2fd', border: '1px solid #2196f3', borderRadius: '4px', padding: '1rem', marginBottom: '2rem' }}>
         <strong>TECP Protocol v0.1</strong> - Making privacy violations mathematically impossible<br/>
         <strong>Lead Architect:</strong> Ali Jakvani | <strong>License:</strong> Apache 2.0<br/>
-        <a href="https://github.com/tecp-protocol/tecp" target="_blank" rel="noopener noreferrer">GitHub Repository</a> | 
+        <a href="https://github.com/resetroot99/tecp" target="_blank" rel="noopener noreferrer">GitHub Repository</a> | 
         <a href="http://localhost:3000/LICENSE.md" target="_blank" rel="noopener noreferrer">License</a>
       </div>
       

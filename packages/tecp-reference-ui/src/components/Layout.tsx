@@ -122,7 +122,7 @@ export function Layout({ children }: LayoutProps) {
               <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
                 <li style={{ marginBottom: '0.5rem' }}>
                   <a 
-                    href="https://github.com/tecp-protocol/tecp" 
+                    href="https://github.com/resetroot99/tecp" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     style={{ fontSize: '0.9rem', color: '#2196f3', textDecoration: 'none' }}

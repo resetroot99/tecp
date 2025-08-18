@@ -3,7 +3,7 @@
 
 > **Making privacy violations mathematically impossible**
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/tecp-protocol/tecp)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/resetroot99/tecp)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Protocol](https://img.shields.io/badge/protocol-TECP--0.1-purple)](spec/PROTOCOL.md)
 [![Demo](https://img.shields.io/badge/demo-live-orange)](https://tecp.dev/demo)
@@ -23,7 +23,7 @@ Computation happens in "digital ghost computers" that process your data and then
 ### Quick Start (30 seconds)
 ```bash
 # Clone and setup
-git clone https://github.com/tecp-protocol/tecp.git
+git clone https://github.com/resetroot99/tecp.git
 cd tecp
 npm install && npm run gen:keys
 
@@ -140,7 +140,7 @@ docker-compose up -d --build
 ### 💻 **Local Development**
 ```bash
 # 1. Clone and setup
-git clone https://github.com/tecp-protocol/tecp.git
+git clone https://github.com/resetroot99/tecp.git
 cd tecp && npm install
 
 # 2. Generate cryptographic keys
@@ -464,7 +464,7 @@ if (result.valid) {
 ### **Development Setup**
 ```bash
 # Complete development environment
-git clone https://github.com/tecp-protocol/tecp.git
+git clone https://github.com/resetroot99/tecp.git
 cd tecp && npm install && npm run gen:keys
 
 # Run comprehensive test suite
@@ -484,7 +484,7 @@ npm run build:all
 - **Testing**: 95%+ coverage required, interoperability tests mandatory
 
 ### **Community**
-- **GitHub**: [tecp-protocol/tecp](https://github.com/tecp-protocol/tecp)
+- **GitHub**: [resetroot99/tecp](https://github.com/resetroot99/tecp)
 - **Issues**: Bug reports and feature requests welcome
 - **Discussions**: Protocol design and implementation questions
 - **Security**: security@tecp.dev for vulnerability reports
@@ -510,7 +510,7 @@ npm run build:all
 
 TECP transforms privacy from a legal promise into a mathematical guarantee. Every computation leaves a cryptographic receipt proving it was ephemeral, policy-compliant, and independently verifiable.
 
-**Get started**: `git clone https://github.com/tecp-protocol/tecp.git`
+**Get started**: `git clone https://github.com/resetroot99/tecp.git`
 
 ---
 

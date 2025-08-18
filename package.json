@@ -54,11 +54,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tecp-protocol/tecp.git"
+    "url": "https://github.com/resetroot99/tecp.git"
   },
   "homepage": "https://tecp.dev",
   "bugs": {
-    "url": "https://github.com/tecp-protocol/tecp/issues"
+    "url": "https://github.com/resetroot99/tecp/issues"
   },
   "keywords": [
     "privacy",
