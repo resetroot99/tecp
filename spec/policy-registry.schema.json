@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tecp.dev/policy-registry.schema.json",
+  "title": "TECP Policy Registry Schema",
+  "description": "JSON Schema for TECP Policy Registry - Machine-readable policy definitions with compliance mappings",
+  "type": "object",
+  "required": ["version", "description", "policies"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri",
+      "description": "JSON Schema reference"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Policy registry version (semantic versioning)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of this policy registry"
+    },
+    "policies": {
+      "type": "object",
+      "description": "Collection of policy definitions",
+      "patternProperties": {
+        "^[a-z][a-z0-9_]*$": {
+          "$ref": "#/$defs/PolicyDefinition"
+        }
+      },
+      "additionalProperties": false
+    },
+    "compliance_frameworks": {
+      "type": "object",
+      "description": "Regulatory compliance framework definitions",
+      "patternProperties": {
+        "^[A-Z][A-Z0-9_]*$": {
+          "$ref": "#/$defs/ComplianceFramework"
+        }
+      },
+      "additionalProperties": false
+    },
+    "enforcement_types": {
+      "type": "object",
+      "description": "Available policy enforcement mechanisms",
+      "patternProperties": {
+        "^[a-z][a-z_]*$": {
+          "type": "string",
+          "description": "Human-readable description of enforcement type"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "PolicyDefinition": {
+      "type": "object",
+      "required": ["description", "enforcement_type", "machine_check"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500,
+          "description": "Human-readable policy description"
+        },
+        "enforcement_type": {
+          "type": "string",
+          "enum": ["design", "infrastructure", "code_audit", "runtime", "cryptographic"],
+          "description": "How this policy is enforced"
+        },
+        "machine_check": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Machine-readable enforcement mechanism identifier"
+        },
+        "compliance_tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*\\.[A-Za-z0-9\\.]+$",
+            "description": "Compliance framework reference (e.g., GDPR.Art17)"
+          },
+          "uniqueItems": true,
+          "description": "Regulatory compliance mappings"
+        },
+        "technical_details": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 1000,
+          "description": "Technical implementation details"
+        },
+        "regulatory_framework": {
+          "type": "string",
+          "description": "Primary regulatory framework this policy addresses"
+        },
+        "key_requirements": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9\\.]+$": {
+              "type": "string",
+              "description": "Specific requirement description"
+            }
+          },
+          "description": "Key regulatory requirements addressed"
+        },
+        "key_articles": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9\\.]+$": {
+              "type": "string",
+              "description": "Specific article description"
+            }
+          },
+          "description": "Key regulatory articles addressed"
+        },
+        "key_sections": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9\\.]+$": {
+              "type": "string",
+              "description": "Specific section description"
+            }
+          },
+          "description": "Key regulatory sections addressed"
+        },
+        "key_controls": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9\\.]+$": {
+              "type": "string",
+              "description": "Specific control description"
+            }
+          },
+          "description": "Key security controls addressed"
+        },
+        "key_provisions": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9\\.]+$": {
+              "type": "string",
+              "description": "Specific provision description"
+            }
+          },
+          "description": "Key legal provisions addressed"
+        },
+        "deprecated": {
+          "type": "boolean",
+          "description": "Whether this policy is deprecated"
+        },
+        "deprecated_reason": {
+          "type": "string",
+          "description": "Reason for deprecation"
+        },
+        "replacement": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Replacement policy ID if deprecated"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ComplianceFramework": {
+      "type": "object",
+      "required": ["name", "jurisdiction"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 200,
+          "description": "Full name of the compliance framework"
+        },
+        "jurisdiction": {
+          "type": "string",
+          "enum": ["US", "EU", "UK", "CA", "AU", "JP", "Global", "International"],
+          "description": "Primary jurisdiction for this framework"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Official URL for the framework"
+        },
+        "key_articles": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9\\.]+$": {
+              "type": "string",
+              "description": "Article description"
+            }
+          },
+          "description": "Key articles in this framework"
+        },
+        "key_sections": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9\\.]+$": {
+              "type": "string",
+              "description": "Section description"
+            }
+          },
+          "description": "Key sections in this framework"
+        },
+        "key_requirements": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9\\.]+$": {
+              "type": "string",
+              "description": "Requirement description"
+            }
+          },
+          "description": "Key requirements in this framework"
+        },
+        "key_controls": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9\\.]+$": {
+              "type": "string",
+              "description": "Control description"
+            }
+          },
+          "description": "Key controls in this framework"
+        },
+        "key_provisions": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9\\.]+$": {
+              "type": "string",
+              "description": "Provision description"
+            }
+          },
+          "description": "Key provisions in this framework"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
