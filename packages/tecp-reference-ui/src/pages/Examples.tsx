@@ -1,3 +1,23 @@
+/*
+ * TECP Reference UI - Examples Page
+ * 
+ * Copyright 2024 TECP Working Group
+ * Lead Architect: Ali Jakvani (v3ctor)
+ * Contributors: TECP Community
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { useState } from 'react';
 import { VerificationResult } from '../components/VerificationResult';
 import { type VerificationResult as VerificationResultType } from '../types/verification';
@@ -169,7 +189,8 @@ print('TECP Receipt:', result['tecp_receipt'])`
       <h1>TECP Examples</h1>
       
       <div className="alert alert-info" style={{ backgroundColor: '#e3f2fd', border: '1px solid #2196f3', borderRadius: '4px', padding: '1rem', marginBottom: '2rem' }}>
-        <strong>Apache License 2.0</strong> - These examples are licensed under the Apache License 2.0.
+        <strong>TECP Interactive Examples</strong> - Live demonstrations of cryptographic receipt generation<br/>
+        <strong>Lead Architect:</strong> Ali Jakvani | <strong>License:</strong> Apache 2.0
       </div>
       
       <section className="section">

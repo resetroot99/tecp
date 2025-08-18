@@ -2,7 +2,7 @@
   "name": "tecp-protocol",
   "version": "0.1.0",
   "description": "Trusted Ephemeral Computation Protocol - Making privacy violations mathematically impossible",
-  "private": true,
+
   "scripts": {
     "postinstall": "npm run install:workspaces",
     "install:workspaces": "cd packages/tecp-reference-ui && npm install",
@@ -27,7 +27,7 @@
     "dev:ui": "cd packages/tecp-reference-ui && npm run dev",
     "dev:all": "concurrently \"npm run dev:demo\" \"npm run dev:log\" \"npm run dev:verifier\" \"npm run dev:ui\"",
     "start:reference": "node scripts/start-reference.js",
-    "start:week2": "node scripts/start-week2.js",
+
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
     "gen:keys": "node scripts/gen-keys.js",
@@ -56,6 +56,10 @@
     "type": "git",
     "url": "https://github.com/tecp-protocol/tecp.git"
   },
+  "homepage": "https://tecp.dev",
+  "bugs": {
+    "url": "https://github.com/tecp-protocol/tecp/issues"
+  },
   "keywords": [
     "privacy",
     "ephemeral-computing",
@@ -66,7 +70,11 @@
     "hipaa"
   ],
   "license": "Apache-2.0",
-  "author": "Ali Jakvani",
+  "author": {
+    "name": "Ali Jakvani",
+    "email": "contact@tecp.dev",
+    "url": "https://github.com/tecp-protocol/tecp"
+  },
   "dependencies": {
     "@noble/curves": "^1.6.0",
     "@noble/ed25519": "^2.3.0",
