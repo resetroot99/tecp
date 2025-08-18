@@ -29,6 +29,7 @@ export function TransparencyLog() {
   const [proof, setProof] = useState<MerkleProof | null>(null);
   const [proofLoading, setProofLoading] = useState(false);
   const baseUrl = (import.meta as any).env?.VITE_TECP_LOG_URL || (typeof window !== 'undefined' ? (window as any).TECP_LOG_URL : '') || 'http://localhost:3002';
+  const isProduction = typeof window !== 'undefined' && (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('netlify.app'));
 
   useEffect(() => {
     loadLogData();
@@ -36,6 +37,14 @@ export function TransparencyLog() {
 
   const loadLogData = async () => {
     try {
+      if (isProduction) {
+        // Use mock data for production deployment
+        const { mockTransparencyLogData } = await import('../utils/mockBackend');
+        setCurrentRoot(mockTransparencyLogData.root as LogRoot);
+        setEntries(mockTransparencyLogData.entries as LogEntry[]);
+        return;
+      }
+
       // Load current root
       const rootResponse = await fetch(`${baseUrl}/root`);
       if (rootResponse.ok) {
@@ -61,6 +70,12 @@ export function TransparencyLog() {
       }
     } catch (error) {
       console.error('Failed to load transparency log data:', error);
+      // Fallback to mock data on error
+      if (isProduction) {
+        const { mockTransparencyLogData } = await import('../utils/mockBackend');
+        setCurrentRoot(mockTransparencyLogData.root as LogRoot);
+        setEntries(mockTransparencyLogData.entries as LogEntry[]);
+      }
     } finally {
       setLoading(false);
     }
@@ -108,6 +123,15 @@ export function TransparencyLog() {
       <div className="alert alert-info" style={{ backgroundColor: '#e3f2fd', border: '1px solid #2196f3', borderRadius: '4px', padding: '1rem', marginBottom: '2rem' }}>
         <strong>Apache License 2.0</strong> - This transparency log is licensed under the Apache License 2.0.
       </div>
+      
+      {isProduction && (
+        <div className="alert alert-warning" style={{ backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '4px', padding: '1rem', marginBottom: '2rem' }}>
+          <strong>Demo Mode:</strong> This deployment shows sample data. 
+          For live transparency log data, run the full stack locally or deploy all services.
+          <br />
+          <code>npm run dev:all</code> to run locally with real backend services.
+        </div>
+      )}
       
       <section className="section">
         <p>
