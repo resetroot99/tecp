@@ -1,0 +1,31 @@
+{
+  "version": "TECP-0.1",
+  "code_ref": "git:dev-build",
+  "ts": 1755541351319,
+  "nonce": "huNtXoovyWZEMEL9vVmq+A==",
+  "input_hash": "xnp1GvzSmX3+FxjW5mi+MrpkglGJA+UPQ+cI1fpyTic=",
+  "output_hash": "9UNAJ9zP6amGb3KY3oGIPiaAhoPfWSnsXApynzdONfU=",
+  "policy_ids": [
+    "key_erasure",
+    "no_retention",
+    "ttl_60s"
+  ],
+  "pubkey": "ddWN+nZPsEk4kth9WczHt4101j3FVj46P8d2WGF0lok=",
+  "sig": "TOoiEAEmW4h2TdxhdUOpefznOFnemvv8qxsKfosXzVToEnbO2DekpxZUhNXwByWvI2jY0KKCA3dU3h6YBXrfAA==",
+  "key_erasure": {
+    "scheme": "sw-sim",
+    "evidence": "ZGVzdHJveWVkX2F0XzE3NTU1NDEzNTEzMTlfbm9uY2VfMC4yMjUxMDE3ODU5NDc1NjYzNg=="
+  },
+  "environment": {
+    "region": "local-dev",
+    "provider": "tecp-private-gpt-demo"
+  },
+  "log_inclusion": {
+    "leaf_index": 3,
+    "merkle_proof": [
+      "ebda6b40bd95ca1911750631e547b036567f4d1131ecb45ec24fd75089501dcd",
+      "589037d66abf5a51f87e97ce8d48a1634fcddf4c9e3aed449375345b863e8974"
+    ],
+    "log_root": "c1987f8fd4d80a887d9920ed90d8ac7ca91db8cc8e7b04872443a4d6b86e0c6a"
+  }
+}

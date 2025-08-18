@@ -1,0 +1,26 @@
+{
+  "name": "@tecp/auditor",
+  "version": "0.1.0",
+  "description": "TECP Auditor - Compliance validation tool for TECP receipts",
+  "type": "module",
+  "bin": {
+    "tecp-audit": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "dependencies": {
+    "@tecp/core": "workspace:*",
+    "commander": "^11.1.0",
+    "chalk": "^5.3.0",
+    "ora": "^7.0.1",
+    "table": "^6.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.3"
+  }
+}

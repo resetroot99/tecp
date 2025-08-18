@@ -1,0 +1,131 @@
+version: '3.9'
+
+services:
+  # TECP Transparency Log
+  tecp-log:
+    build:
+      context: ..
+      dockerfile: deployments/Dockerfile.log
+    environment:
+      - PORT=3002
+      - DB_PATH=/data/tecp.db
+      - LOG_PRIVATE_KEY=${LOG_PRIVATE_KEY}
+      - LOG_PUBLIC_KEY=${LOG_PUBLIC_KEY}
+      - LOG_KEY_ID=${LOG_KEY_ID:-log-202412}
+      - NODE_ENV=production
+      - CORS_ORIGINS=http://localhost:3001,http://localhost:3003,http://localhost:3004
+    volumes:
+      - tecp-log-data:/data
+    ports:
+      - "3002:3002"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - tecp-network
+
+  # Private-GPT Demo API
+  tecp-demo:
+    build:
+      context: ..
+      dockerfile: deployments/Dockerfile.demo
+    environment:
+      - PORT=3001
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - DEEPSEEK_BASE_URL=https://api.deepseek.com
+      - TECP_LOG_URL=http://tecp-log:3002
+      - VERIFIER_URL=http://tecp-verifier:3004
+      - NODE_ENV=production
+      - CORS_ORIGIN=http://localhost:3003
+    depends_on:
+      tecp-log:
+        condition: service_healthy
+    ports:
+      - "3001:3001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - tecp-network
+
+  # Web Verifier Service
+  tecp-verifier:
+    build:
+      context: ..
+      dockerfile: deployments/Dockerfile.verifier
+    environment:
+      - PORT=3004
+      - TECP_LOG_URL=http://tecp-log:3002
+      - NODE_ENV=production
+    depends_on:
+      tecp-log:
+        condition: service_healthy
+    ports:
+      - "3004:3004"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - tecp-network
+
+  # Reference UI
+  tecp-ui:
+    build:
+      context: ..
+      dockerfile: deployments/Dockerfile.ui
+    environment:
+      - VITE_TECP_LOG_URL=http://localhost:3002
+      - VITE_TECP_DEMO_URL=http://localhost:3001
+      - VITE_TECP_VERIFIER_URL=http://localhost:3004
+    depends_on:
+      - tecp-log
+      - tecp-demo
+      - tecp-verifier
+    ports:
+      - "3003:80"
+    restart: unless-stopped
+    networks:
+      - tecp-network
+
+  # Reverse Proxy with TLS
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - tecp-demo
+      - tecp-log
+      - tecp-verifier
+      - tecp-ui
+    restart: unless-stopped
+    networks:
+      - tecp-network
+
+volumes:
+  tecp-log-data:
+    driver: local
+  caddy_data:
+    driver: local
+  caddy_config:
+    driver: local
+
+networks:
+  tecp-network:
+    driver: bridge

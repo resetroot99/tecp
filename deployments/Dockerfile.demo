@@ -1,0 +1,47 @@
+# TECP Private-GPT Demo Dockerfile
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY packages/tecp-core/package.json ./packages/tecp-core/
+COPY demo/private-gpt/package.json ./demo/private-gpt/
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy source code
+COPY packages/tecp-core/ ./packages/tecp-core/
+COPY demo/private-gpt/ ./demo/private-gpt/
+
+# Build the application
+RUN npm run build:core
+RUN cd demo/private-gpt && npm run build
+
+# Production stage
+FROM node:20-alpine AS production
+
+WORKDIR /app
+
+# Install production dependencies only
+COPY package*.json ./
+COPY packages/tecp-core/package.json ./packages/tecp-core/
+COPY demo/private-gpt/package.json ./demo/private-gpt/
+RUN npm ci --only=production
+
+# Copy built application
+COPY --from=builder /app/packages/tecp-core/dist ./packages/tecp-core/dist
+COPY --from=builder /app/demo/private-gpt/dist ./demo/private-gpt/dist
+
+# Switch to non-root user
+USER node
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3001/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
+
+EXPOSE 3001
+
+CMD ["node", "demo/private-gpt/dist/index.js"]

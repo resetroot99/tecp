@@ -1,0 +1,34 @@
+{
+  "name": "tampered-signature",
+  "description": "Receipt with tampered signature should fail verification",
+  "test_data": {
+    "description": "Valid receipt with signature modified to be invalid"
+  },
+  "receipt": {
+    "version": "TECP-0.1",
+    "code_ref": "git:abc123def456",
+    "ts": 1692115200000,
+    "nonce": "dGVzdC1ub25jZS0xMjM=",
+    "input_hash": "uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=",
+    "output_hash": "dffd6021bb2bd5b0af676290809ec3a53191dd81c7f70a4b28688a362182986f",
+    "policy_ids": ["no_retention"],
+    "sig": "INVALID_SIGNATURE_BYTES_HERE_SHOULD_FAIL_VERIFICATION",
+    "pubkey": "MCowBQYDK2VwAyEAm9J4k8XlBw5+/qdTEJg0j5DQFJ7vYV8m5X7qR3E2dA=="
+  },
+  "verification_result": {
+    "valid": false,
+    "errors": [
+      {
+        "code": "E-SIG-002",
+        "message": "Signature verification failed",
+        "field": "sig"
+      }
+    ],
+    "details": {
+      "signature": "Invalid",
+      "timestamp": "OK",
+      "schema": "OK",
+      "transparencyLog": "Not checked"
+    }
+  }
+}

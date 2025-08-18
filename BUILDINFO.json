@@ -1,0 +1,62 @@
+{
+  "version": "1.0",
+  "generated_at": "2025-08-18T21:19:10.559Z",
+  "git": {
+    "commit": "unknown",
+    "branch": "unknown",
+    "tag": null,
+    "dirty": false,
+    "remote": "unknown"
+  },
+  "node": {
+    "version": "v23.11.0",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "package": {
+    "name": "tecp-protocol",
+    "version": "0.1.0",
+    "dependencies": {
+      "@noble/ed25519": "^2.3.0",
+      "@noble/hashes": "^1.8.0",
+      "@noble/curves": "^1.6.0",
+      "cbor-x": "^1.6.0",
+      "cors": "^2.8.5",
+      "dotenv": "^17.2.1",
+      "express": "^5.1.0",
+      "helmet": "^8.1.0",
+      "node-fetch": "^3.3.2",
+      "sqlite3": "^5.1.6",
+      "commander": "^11.1.0",
+      "chalk": "^5.3.0",
+      "ora": "^8.0.1"
+    },
+    "devDependencies": {
+      "@types/cors": "^2.8.19",
+      "@types/express": "^5.0.3",
+      "@types/node": "^20.19.11",
+      "@typescript-eslint/eslint-plugin": "^6.15.0",
+      "@typescript-eslint/parser": "^6.15.0",
+      "concurrently": "^8.2.2",
+      "eslint": "^8.56.0",
+      "eslint-config-prettier": "^9.1.0",
+      "eslint-plugin-prettier": "^5.1.0",
+      "prettier": "^3.1.1",
+      "tsx": "^4.20.4",
+      "typescript": "^5.9.2"
+    }
+  },
+  "toolchain": {
+    "typescript": "Version 5.9.2",
+    "node": "v23.11.0",
+    "npm": "10.9.2"
+  },
+  "dependencies": {
+    "package_lock_hash": "1acf6668fb0629b789665c38acf69f6a4c6e6199b0c0783b0f347de5642e3a29",
+    "npm_version": "10.9.2"
+  },
+  "source_hash": "376f0c22a97ce914d3de1891ae0360218bfc52069f9e12b03362a10077e1fc40",
+  "build_command": "npm run build",
+  "reproducible": true,
+  "code_ref": "build:897b7ff59f1af8e7812277dd3291bfe6ffa0b428372a4ae7c0f04715b79da5bc"
+}

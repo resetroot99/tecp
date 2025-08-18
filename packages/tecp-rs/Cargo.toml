@@ -1,0 +1,60 @@
+[package]
+name = "tecp"
+version = "0.1.0"
+edition = "2021"
+authors = ["TECP Working Group <contact@tecp.dev>"]
+description = "Trusted Ephemeral Computation Protocol - Rust SDK"
+license = "Apache-2.0"
+repository = "https://github.com/tecp-protocol/tecp"
+homepage = "https://tecp.dev"
+documentation = "https://docs.rs/tecp"
+keywords = ["cryptography", "privacy", "ephemeral", "computation", "receipts"]
+categories = ["cryptography", "api-bindings"]
+readme = "README.md"
+
+[dependencies]
+# Cryptography
+ed25519-dalek = { version = "2.0", features = ["rand_core"] }
+sha2 = "0.10"
+rand = "0.8"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+ciborium = "0.2"  # CBOR implementation
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Time handling
+chrono = { version = "0.4", features = ["serde"] }
+
+# Base64 encoding
+base64 = "0.21"
+
+# Async support (optional)
+tokio = { version = "1.0", features = ["full"], optional = true }
+reqwest = { version = "0.11", features = ["json"], optional = true }
+
+[dev-dependencies]
+tokio-test = "0.4"
+criterion = "0.5"
+
+[features]
+default = []
+async = ["tokio", "reqwest"]
+cli = ["clap"]
+
+[dependencies.clap]
+version = "4.0"
+features = ["derive"]
+optional = true
+
+[[bin]]
+name = "tecp"
+required-features = ["cli"]
+
+[[bench]]
+name = "receipt_benchmark"
+harness = false

@@ -1,0 +1,95 @@
+# TECP Production Caddyfile
+# Replace with your actual domains
+
+{
+    # Global options
+    admin off
+    auto_https off
+}
+
+# Main API endpoint
+api.tecp.local {
+    reverse_proxy tecp-demo:3001
+    
+    # Security headers
+    header {
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+    
+    # CORS for development
+    @cors_preflight method OPTIONS
+    respond @cors_preflight 200 {
+        header Access-Control-Allow-Origin "*"
+        header Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        header Access-Control-Allow-Headers "Content-Type, Authorization, X-TECP-Policies"
+    }
+    
+    header Access-Control-Allow-Origin "*"
+}
+
+# Transparency log
+log.tecp.local {
+    reverse_proxy tecp-log:3002
+    
+    header {
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+    
+    # CORS for verification
+    @cors_preflight method OPTIONS
+    respond @cors_preflight 200 {
+        header Access-Control-Allow-Origin "*"
+        header Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        header Access-Control-Allow-Headers "Content-Type"
+    }
+    
+    header Access-Control-Allow-Origin "*"
+}
+
+# Web verifier
+verify.tecp.local {
+    reverse_proxy tecp-verifier:3004
+    
+    header {
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+    
+    # CORS for verification
+    @cors_preflight method OPTIONS
+    respond @cors_preflight 200 {
+        header Access-Control-Allow-Origin "*"
+        header Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        header Access-Control-Allow-Headers "Content-Type"
+    }
+    
+    header Access-Control-Allow-Origin "*"
+}
+
+# Reference UI
+tecp.local {
+    reverse_proxy tecp-ui:80
+    
+    header {
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}
+
+# Development - localhost routing
+localhost:8080 {
+    redir /api/* http://localhost:3001{uri}
+    redir /log/* http://localhost:3002{uri}
+    redir /verify/* http://localhost:3004{uri}
+    reverse_proxy tecp-ui:80
+}

@@ -1,0 +1,36 @@
+{
+  "name": "basic-valid-receipt",
+  "description": "Minimal valid TECP receipt with required fields only",
+  "test_data": {
+    "private_key": "MC4CAQAwBQYDK2VwBCIEIF5mN5Z8xF6B7n9xI8+3JlLqtRjQ1mU8YYIzT7ZOjR7p",
+    "public_key": "MCowBQYDK2VwAyEAm9J4k8XlBw5+/qdTEJg0j5DQFJ7vYV8m5X7qR3E2dA==",
+    "code_ref": "git:abc123def456",
+    "input_data": "hello world",
+    "output_data": "Hello, World!",
+    "policy_ids": ["no_retention"],
+    "timestamp": 1692115200000,
+    "nonce": "dGVzdC1ub25jZS0xMjM="
+  },
+  "expected_receipt": {
+    "version": "TECP-0.1",
+    "code_ref": "git:abc123def456",
+    "ts": 1692115200000,
+    "nonce": "dGVzdC1ub25jZS0xMjM=",
+    "input_hash": "uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=",
+    "output_hash": "dffd6021bb2bd5b0af676290809ec3a53191dd81c7f70a4b28688a362182986f",
+    "policy_ids": ["no_retention"],
+    "sig": "MEUCIQDKmxK8Zy8+1Vz9Xh2YjF3pL4mN5qR7sT8uV9wX0yZ1aQIgB2cD3eF4gH5iJ6kL7mN8oP9qR0sT1uV2wX3yZ4a5b6c=",
+    "pubkey": "MCowBQYDK2VwAyEAm9J4k8XlBw5+/qdTEJg0j5DQFJ7vYV8m5X7qR3E2dA=="
+  },
+  "cbor_bytes": "a8617601655443502d302e3167636f64655f7265666a6769743a61626331323364656634353668747381627473197a9a685f680067696e7075745f68617368782075553075755a4e4e5067696c4c6c4c58326e32722b735345372b4e365534447566496a33724f4c767a656b6a6f75747075745f686173687820646666643630323162623262643562306166363736323930383039656333613533313931646438316337663730613462323836383861333632313832393836666a706f6c6963795f696473816e6e6f5f72657461696e74696f6e677075626b6579782c4d436f774251594432326c774179454179394a346b38586c42773525f716454454a5730743644464a377659563865355837715233453264413d3d63736967784d4555434951444b6d784b385a79382b31567a39586832596a4633704c346d4e3571523773543875563977583079",
+  "verification_result": {
+    "valid": true,
+    "errors": [],
+    "details": {
+      "signature": "Valid",
+      "timestamp": "OK",
+      "schema": "OK",
+      "transparencyLog": "Not checked"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@tecp/verifier",
+  "version": "0.1.0",
+  "description": "TECP Receipt Verifier - CLI and web interface for receipt validation",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "tecp-verify": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/web.ts",
+    "start": "node dist/web.js",
+    "test": "jest",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@tecp/core": "workspace:*",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "commander": "^11.1.0",
+    "chalk": "^5.3.0",
+    "ora": "^8.0.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20.10.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "keywords": ["tecp", "verifier", "receipt", "privacy", "cryptography"],
+  "license": "Apache-2.0",
+  "author": "TECP Protocol Team"
+}

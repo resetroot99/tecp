@@ -1,0 +1,68 @@
+# TECP Transparency Log - Fly.io Configuration
+app = "tecp-log"
+primary_region = "sjc"
+
+[build]
+  dockerfile = "../Dockerfile.log"
+
+[env]
+  PORT = "3002"
+  NODE_ENV = "production"
+  DB_PATH = "/data/tecp.db"
+
+[mounts]
+  source = "tecp_log_data"
+  destination = "/data"
+
+[[services]]
+  http_checks = []
+  internal_port = 3002
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
+
+[http_service]
+  internal_port = 3002
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
+[[http_service.checks]]
+  grace_period = "10s"
+  interval = "30s"
+  method = "GET"
+  path = "/health"
+  protocol = "http"
+  restart_limit = 0
+  timeout = "5s"
+
+[metrics]
+  port = 9091
+  path = "/metrics"

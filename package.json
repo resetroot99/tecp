@@ -1,0 +1,86 @@
+{
+  "name": "tecp-protocol",
+  "version": "0.1.0",
+  "description": "Trusted Ephemeral Computation Protocol - Making privacy violations mathematically impossible",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:core && npm run build:verifier && npm run build:log && npm run build:ui && npm run build:sdks",
+    "build:sdks": "npm run build:sdk-js && npm run build:sdk-py && npm run build:sdk-go",
+    "build:core": "tsc -p packages/tecp-core/",
+    "build:verifier": "tsc -p packages/tecp-verifier/",
+    "build:log": "tsc -p services/tecp-log/",
+    "build:ui": "cd packages/tecp-reference-ui && npm run build",
+    "build:sdk-js": "tsc -p packages/tecp-sdk-js/",
+    "build:sdk-py": "cd packages/tecp-sdk-py && python setup.py build",
+    "build:sdk-go": "cd packages/tecp-sdk-go && go build ./...",
+    "test": "npm run test:vectors && npm run test:interop",
+    "test:vectors": "node scripts/test-vectors.js",
+    "test:interop": "node scripts/test-interop.js",
+    "test:fuzz": "node scripts/fuzz-test.js",
+    "dev:demo": "cd demo/private-gpt && npm run dev",
+    "dev:log": "cd services/tecp-log && npm run dev",
+    "dev:verifier": "cd packages/tecp-verifier && npm run dev",
+    "dev:ui": "cd packages/tecp-reference-ui && npm run dev",
+    "dev:all": "concurrently \"npm run dev:demo\" \"npm run dev:log\" \"npm run dev:verifier\" \"npm run dev:ui\"",
+    "start:reference": "node scripts/start-reference.js",
+    "start:week2": "node scripts/start-week2.js",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write .",
+    "gen:keys": "node scripts/gen-keys.js",
+    "verify": "node packages/tecp-verifier/dist/cli.js",
+    "clean": "rm -rf node_modules packages/*/dist demo/*/dist services/*/dist"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^20.19.11",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.0",
+    "prettier": "^3.1.1",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tecp-protocol/tecp.git"
+  },
+  "keywords": [
+    "privacy",
+    "ephemeral-computing",
+    "cryptographic-receipts",
+    "zero-trust",
+    "compliance",
+    "gdpr",
+    "hipaa"
+  ],
+  "license": "Apache-2.0",
+  "author": "TECP Protocol Contributors",
+  "dependencies": {
+    "@noble/curves": "^1.6.0",
+    "@noble/ed25519": "^2.3.0",
+    "@noble/hashes": "^1.8.0",
+    "cbor-x": "^1.6.0",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
+    "node-fetch": "^3.3.2",
+    "ora": "^8.0.1",
+    "sqlite3": "^5.1.6"
+  },
+  "tecp": {
+    "code_ref": "build:897b7ff59f1af8e7812277dd3291bfe6ffa0b428372a4ae7c0f04715b79da5bc",
+    "build_hash": "376f0c22a97ce914d3de1891ae0360218bfc52069f9e12b03362a10077e1fc40"
+  }
+}

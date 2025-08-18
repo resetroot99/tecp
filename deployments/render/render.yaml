@@ -1,0 +1,96 @@
+# TECP Render.com Deployment Configuration
+services:
+  # Transparency Log Service
+  - type: web
+    name: tecp-log
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: npm ci && npm run build:core && npm run build:log
+    startCommand: node services/tecp-log/dist/index.js
+    healthCheckPath: /health
+    disk:
+      name: tecp-log-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: PORT
+        value: 3002
+      - key: NODE_ENV
+        value: production
+      - key: DB_PATH
+        value: /data/tecp.db
+      - key: LOG_PRIVATE_KEY
+        sync: false
+      - key: LOG_PUBLIC_KEY
+        sync: false
+      - key: LOG_KEY_ID
+        value: log-202412
+      - key: CORS_ORIGINS
+        value: https://tecp-demo.onrender.com,https://tecp-ui.onrender.com,https://tecp-verifier.onrender.com
+
+  # Private-GPT Demo Service
+  - type: web
+    name: tecp-demo
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: npm ci && npm run build:core && cd demo/private-gpt && npm run build
+    startCommand: node demo/private-gpt/dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: NODE_ENV
+        value: production
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: DEEPSEEK_BASE_URL
+        value: https://api.deepseek.com
+      - key: TECP_LOG_URL
+        value: https://tecp-log.onrender.com
+      - key: VERIFIER_URL
+        value: https://tecp-verifier.onrender.com
+      - key: CORS_ORIGIN
+        value: https://tecp-ui.onrender.com
+
+  # Web Verifier Service
+  - type: web
+    name: tecp-verifier
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: npm ci && npm run build:core && npm run build:verifier
+    startCommand: node packages/tecp-verifier/dist/web.js
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 3004
+      - key: NODE_ENV
+        value: production
+      - key: TECP_LOG_URL
+        value: https://tecp-log.onrender.com
+
+  # Reference UI (Static Site)
+  - type: web
+    name: tecp-ui
+    env: static
+    region: oregon
+    plan: starter
+    buildCommand: cd packages/tecp-reference-ui && npm ci && npm run build
+    staticPublishPath: packages/tecp-reference-ui/dist
+    envVars:
+      - key: VITE_TECP_LOG_URL
+        value: https://tecp-log.onrender.com
+      - key: VITE_TECP_DEMO_URL
+        value: https://tecp-demo.onrender.com
+      - key: VITE_TECP_VERIFIER_URL
+        value: https://tecp-verifier.onrender.com
+
+# Database (if needed for future scaling)
+databases:
+  - name: tecp-postgres
+    databaseName: tecp
+    user: tecp
+    region: oregon
+    plan: starter
