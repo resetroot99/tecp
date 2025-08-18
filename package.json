@@ -4,6 +4,8 @@
   "description": "Trusted Ephemeral Computation Protocol - Making privacy violations mathematically impossible",
   "private": true,
   "scripts": {
+    "postinstall": "npm run install:workspaces",
+    "install:workspaces": "cd packages/tecp-reference-ui && npm install",
     "build": "npm run build:core && npm run build:verifier && npm run build:log && npm run build:ui && npm run build:sdks",
     "build:sdks": "npm run build:sdk-js && npm run build:sdk-py && npm run build:sdk-go",
     "build:core": "tsc -p packages/tecp-core/",
