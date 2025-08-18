@@ -42,7 +42,7 @@ from .exceptions import (
 )
 
 __version__ = "0.1.0"
-__author__ = "TECP Protocol Contributors"
+__author__ = "Ali Jakvani"
 __license__ = "Apache-2.0"
 
 __all__ = [

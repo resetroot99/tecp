@@ -21,8 +21,8 @@ setup(
     description="TECP SDK for Python - Create and verify ephemeral computation receipts",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
-    author="TECP Protocol Contributors",
-    author_email="contributors@tecp.dev",
+    author="Ali Jakvani",
+    author_email="ali@jakvani.dev",
     url="https://github.com/tecp-protocol/tecp",
     project_urls={
         "Documentation": "https://tecp.dev/docs",
