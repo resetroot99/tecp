@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "packages/tecp-reference-ui/dist",
+  "framework": null,
+  "installCommand": "npm install"
+}
