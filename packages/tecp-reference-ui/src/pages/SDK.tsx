@@ -228,14 +228,44 @@ const body = result.text; // original response`}</code>
         <div className="bg-white border border-gray-200 rounded-lg p-6">
           <div className="mb-4">
             <p className="text-gray-600 mb-4">
-              Add a small "Powered by TECP" badge to show users your app issues verifiable receipts.
+              Add a beautiful "Powered by TECP" badge to show users your app issues verifiable receipts.
               <strong className="text-red-600"> Never sign in the browser - verification only!</strong>
             </p>
+            
+            {/* Badge Preview */}
+            <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+              <p className="text-sm text-gray-600 mb-2">Preview:</p>
+              <svg width="120" height="20" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style={{stopColor:'#2563eb', stopOpacity:1}} />
+                    <stop offset="100%" style={{stopColor:'#1d4ed8', stopOpacity:1}} />
+                  </linearGradient>
+                </defs>
+                
+                <rect width="120" height="20" rx="3" ry="3" fill="url(#gradient)"/>
+                <rect x="0" y="0" width="24" height="20" rx="3" ry="3" fill="#1e40af"/>
+                
+                <g transform="translate(12, 10)">
+                  <rect x="-3" y="-4" width="6" height="8" rx="0.5" fill="white" stroke="none"/>
+                  <line x1="-2" y1="-2.5" x2="2" y2="-2.5" stroke="#1e40af" strokeWidth="0.5"/>
+                  <line x1="-2" y1="-1" x2="2" y2="-1" stroke="#1e40af" strokeWidth="0.5"/>
+                  <line x1="-2" y1="0.5" x2="1" y2="0.5" stroke="#1e40af" strokeWidth="0.5"/>
+                  <circle cx="1.5" cy="2.5" r="1" fill="#1e40af"/>
+                  <path d="M1,2.5 L1.3,2.8 L2,2.1" stroke="white" strokeWidth="0.4" fill="none" strokeLinecap="round"/>
+                </g>
+                
+                <text x="28" y="14" fontFamily="Arial, sans-serif" fontSize="11" fontWeight="500" fill="white">
+                  Powered by TECP
+                </text>
+              </svg>
+            </div>
+            
             <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm">
               <code>{`import { injectTrustBadge } from '@tecp/sdk';
 
 injectTrustBadge({
-  href: 'https://verify.tecp.dev',
+  href: 'https://tecp.dev',
   title: 'This app issues verifiable AI receipts',
   position: 'bottom-right'
 });`}</code>
