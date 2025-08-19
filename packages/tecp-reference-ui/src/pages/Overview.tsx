@@ -180,10 +180,7 @@ curl -X POST http://localhost:3001/v1/chat/completions \\
           <strong>Protocol Design:</strong> Conservative threat model with clear security boundaries<br/>
           <strong>License:</strong> Apache 2.0 (code), CC BY 4.0 (specification)
         </p>
-        <p>
-          TECP represents a rare combination of academic cryptographic rigor with real-world production engineering excellence.
-          The protocol is designed for standardization and has been built with enterprise deployment in mind from day one.
-        </p>
+
       </section>
     </div>
   );
