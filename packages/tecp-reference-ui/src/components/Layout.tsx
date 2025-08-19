@@ -27,6 +27,7 @@ interface LayoutProps {
 
 const navigation = [
   { path: '/', label: 'Overview' },
+  { path: '/sdk', label: 'SDK' },
   { path: '/verify', label: 'Verify' },
   { path: '/examples', label: 'Examples' },
   { path: '/gateway', label: 'Enterprise Gateway' },

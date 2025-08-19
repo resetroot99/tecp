@@ -22,6 +22,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Overview } from './pages/Overview';
+import { SDK } from './pages/SDK';
 import { Verify } from './pages/Verify';
 import { Examples } from './pages/Examples';
 import { Policies } from './pages/Policies';
@@ -43,6 +44,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Overview />} />
+          <Route path="/sdk" element={<SDK />} />
           <Route path="/verify" element={<Verify />} />
           <Route path="/examples" element={<Examples />} />
           <Route path="/policies" element={<Policies />} />

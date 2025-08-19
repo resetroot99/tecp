@@ -54,6 +54,79 @@ The main client class for creating and verifying TECP receipts.
 new TECPClient(options?: TECPClientOptions)
 ```
 
+## AI Proof Plug-In (One-line Wrapper)
+
+Wrap any async function and automatically issue (and optionally verify) a TECP receipt:
+
+```typescript
+import { wrap, generateKeyPair } from '@tecp/sdk';
+
+const { privateKey } = await generateKeyPair();
+
+// Your business logic
+async function callLLM(input: string) {
+  return await fetch('/api/llm', { method: 'POST', body: input }).then(r => r.json());
+}
+
+// One-line proof wrapper
+const callLLMWithProof = wrap(callLLM, {
+  privateKey,
+  policies: ['no_retention', 'no_pii'],
+  verify: true,
+  codeRef: process.env.GIT_COMMIT
+});
+
+const { result, tecp_receipt, tecp_verification } = await callLLMWithProof('Hello');
+```
+
+### Next.js example
+
+```typescript
+// app/api/complete/route.ts
+import { wrap, generateKeyPair } from '@tecp/sdk';
+
+const keys = await generateKeyPair();
+
+async function completeInternal(input: string) {
+  // ... call provider ...
+  return { text: 'result' };
+}
+
+export const POST = async (req: Request) => {
+  const body = await req.json();
+  const handler = wrap(completeInternal, { privateKey: keys.privateKey, policies: ['no_retention'] });
+  const { result, tecp_receipt } = await handler(body.prompt);
+  return Response.json({ result, tecp_receipt });
+};
+```
+
+### Python Flask example
+
+```python
+# pip install tecp-sdk-py
+from tecp_sdk import wrap, generate_keypair
+
+priv, pub = generate_keypair()
+
+def complete_internal(prompt: str):
+    return { 'text': 'result' }
+
+complete_with_proof = wrap(complete_internal, private_key=priv, policies=['no_retention'])
+
+@app.post('/api/complete')
+def complete():
+    body = request.get_json()
+    result, receipt = complete_with_proof(body['prompt'])
+    return jsonify({ 'result': result, 'tecp_receipt': receipt })
+```
+
+### Trust badge
+
+```typescript
+import { injectTrustBadge } from '@tecp/sdk';
+injectTrustBadge(); // Adds a small "Powered by TECP" badge in the corner
+```
+
 Options:
 - `privateKey?: Uint8Array` - Ed25519 private key for signing receipts
 - `profile?: TECPProfile` - TECP profile: 'tecp-lite', 'tecp-v0.1', or 'tecp-strict'
