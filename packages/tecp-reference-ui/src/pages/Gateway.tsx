@@ -8,9 +8,24 @@
  */
 
 import { useState } from 'react';
+import { ReceiptViewer } from '../components/ReceiptViewer';
+import { exportReceiptToPDF } from '../utils/pdfExport';
 
 export function Gateway() {
   const [demoCode, setDemoCode] = useState('javascript');
+  const [currentReceipt, setCurrentReceipt] = useState<any>(null);
+  const [currentVerification, setCurrentVerification] = useState<any>(null);
+
+  const handleReceiptVerified = (receipt: any, verification: any) => {
+    setCurrentReceipt(receipt);
+    setCurrentVerification(verification);
+  };
+
+  const handleDownloadProof = () => {
+    if (currentReceipt) {
+      exportReceiptToPDF(currentReceipt, currentVerification);
+    }
+  };
 
   const codeExamples = {
     javascript: `// Zero-code integration - just change the base URL!
@@ -183,25 +198,101 @@ curl -X POST https://gateway.tecp.dev/v1/chat/completions \\
         </div>
       </div>
 
+      {/* Try It Section */}
+      <div className="mb-8">
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">Try It Now</h2>
+          <p className="text-gray-600">Test the gateway with a sample request and verify the cryptographic receipt</p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Sample Request */}
+          <div className="bg-white border border-gray-200 rounded-lg">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Sample Gateway Request</h3>
+              <p className="text-sm text-gray-600">Example API call with TECP policy enforcement</p>
+            </div>
+            <div className="p-6">
+              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+                <code>{`curl -X POST https://gateway.tecp.dev/v1/chat/completions \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer $OPENAI_API_KEY" \\
+  -H "x-tecp-api-key: demo-key" \\
+  -H "x-tecp-policies: no_retention,hipaa_compliant,audit_trail" \\
+  -H "x-tecp-user-id: doctor_123" \\
+  -d '{
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Analyze patient symptoms: fever, cough, fatigue"
+      }
+    ],
+    "max_tokens": 500
+  }'
+
+# Response includes both OpenAI response AND TECP receipt:
+{
+  "id": "chatcmpl-123",
+  "choices": [...],
+  "usage": {...},
+  "tecp_receipt": {
+    "receipt_id": "rcpt_abc123def456",
+    "input_hash": "sha256:a665a45920422f9d...",
+    "output_hash": "sha256:b5d4045c3f466fa9...",
+    "policy_ids": ["no_retention", "hipaa_compliant", "audit_trail"],
+    "signature": "ed25519:304502210089abcdef...",
+    "transparency_log_entry": "log_entry_xyz789"
+  }
+}`}</code>
+              </pre>
+            </div>
+          </div>
+
+          {/* Receipt Viewer */}
+          <div>
+            <ReceiptViewer onReceiptVerified={handleReceiptVerified} />
+            
+            {/* Download Proof Button */}
+            {currentReceipt && (
+              <div className="mt-4">
+                <button
+                  onClick={handleDownloadProof}
+                  className="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Download Proof (PDF)
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Enterprise Use Cases */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <a href="/gateway/healthcare" className="bg-white border border-gray-200 rounded-lg p-6 hover:border-blue-300 hover:shadow-md transition-all">
           <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
             <div className="w-6 h-6 bg-blue-600 rounded"></div>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Healthcare</h3>
           <p className="text-gray-600 text-sm mb-4">
-            HIPAA-compliant AI processing with automatic PII detection and cryptographic audit trails.
+            HIPAA-compliant AI processing with automatic PHI detection and cryptographic audit trails.
           </p>
-          <ul className="space-y-2 text-sm text-gray-700">
+          <ul className="space-y-2 text-sm text-gray-700 mb-4">
             <li>• HIPAA 164.312 compliance</li>
             <li>• Automatic PHI detection</li>
             <li>• Cryptographic receipts</li>
             <li>• Complete audit trails</li>
           </ul>
-        </div>
+          <div className="text-blue-600 text-sm font-medium">
+            Learn more about Healthcare Gateway →
+          </div>
+        </a>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <a href="/gateway/finance" className="bg-white border border-gray-200 rounded-lg p-6 hover:border-green-300 hover:shadow-md transition-all">
           <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
             <div className="w-6 h-6 bg-green-600 rounded"></div>
           </div>
@@ -209,15 +300,18 @@ curl -X POST https://gateway.tecp.dev/v1/chat/completions \\
           <p className="text-gray-600 text-sm mb-4">
             SOX-compliant AI analysis with complete audit trails and data governance controls.
           </p>
-          <ul className="space-y-2 text-sm text-gray-700">
+          <ul className="space-y-2 text-sm text-gray-700 mb-4">
             <li>• SOX Section 404 compliance</li>
             <li>• Financial data protection</li>
             <li>• Regulatory reporting</li>
             <li>• Risk management controls</li>
           </ul>
-        </div>
+          <div className="text-green-600 text-sm font-medium">
+            Learn more about Finance Gateway →
+          </div>
+        </a>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <a href="/gateway/legal" className="bg-white border border-gray-200 rounded-lg p-6 hover:border-purple-300 hover:shadow-md transition-all">
           <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
             <div className="w-6 h-6 bg-purple-600 rounded"></div>
           </div>
@@ -225,52 +319,141 @@ curl -X POST https://gateway.tecp.dev/v1/chat/completions \\
           <p className="text-gray-600 text-sm mb-4">
             Client-confidential AI processing with GDPR compliance and verifiable data handling.
           </p>
-          <ul className="space-y-2 text-sm text-gray-700">
+          <ul className="space-y-2 text-sm text-gray-700 mb-4">
             <li>• GDPR Article 17 compliance</li>
             <li>• Client confidentiality</li>
             <li>• Verifiable processing</li>
             <li>• Data sovereignty controls</li>
           </ul>
-        </div>
+          <div className="text-purple-600 text-sm font-medium">
+            Learn more about Legal Gateway →
+          </div>
+        </a>
       </div>
 
       {/* Deployment Options */}
-      <div className="bg-white border border-gray-200 rounded-lg">
+      <div className="bg-white border border-gray-200 rounded-lg mb-8">
         <div className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">Enterprise Deployment</h2>
-          <p className="text-sm text-gray-600">Multiple deployment options for your infrastructure</p>
+          <p className="text-sm text-gray-600">Production-ready deployment options with real configuration examples</p>
         </div>
         <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="text-center p-4 border border-gray-200 rounded-lg">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <div className="w-6 h-6 bg-blue-600 rounded"></div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            {/* Docker Deployment */}
+            <div className="border border-gray-200 rounded-lg">
+              <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                <h3 className="font-semibold text-gray-900">Docker</h3>
+                <p className="text-sm text-gray-600">Quick containerized deployment</p>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Docker</h3>
-              <p className="text-sm text-gray-600">Containerized deployment</p>
-            </div>
-            <div className="text-center p-4 border border-gray-200 rounded-lg">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <div className="w-6 h-6 bg-green-600 rounded"></div>
+              <div className="p-4">
+                <pre className="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto">
+                  <code>{`# Pull and run the gateway
+docker run -d \\
+  --name tecp-gateway \\
+  -p 3001:3001 \\
+  -e OPENAI_API_KEY=sk-... \\
+  -e JWT_SECRET=your-secret-key \\
+  -e POLICY_ENFORCEMENT_ENABLED=true \\
+  -e TRANSPARENCY_LOG_URL=https://log.tecp.dev \\
+  tecp/gateway:latest
+
+# Check status
+docker logs tecp-gateway`}</code>
+                </pre>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Kubernetes</h3>
-              <p className="text-sm text-gray-600">Scalable orchestration</p>
             </div>
-            <div className="text-center p-4 border border-gray-200 rounded-lg">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <div className="w-6 h-6 bg-purple-600 rounded"></div>
+
+            {/* Kubernetes Deployment */}
+            <div className="border border-gray-200 rounded-lg">
+              <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                <h3 className="font-semibold text-gray-900">Kubernetes</h3>
+                <p className="text-sm text-gray-600">Scalable orchestration with Helm</p>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">On-Premise</h3>
-              <p className="text-sm text-gray-600">Full data control</p>
-            </div>
-            <div className="text-center p-4 border border-gray-200 rounded-lg">
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <div className="w-6 h-6 bg-yellow-600 rounded"></div>
+              <div className="p-4">
+                <pre className="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto">
+                  <code>{`# Install with Helm
+helm repo add tecp https://charts.tecp.dev
+helm install tecp-gateway tecp/gateway \\
+  --set openai.apiKey=sk-... \\
+  --set gateway.replicas=3 \\
+  --set ingress.enabled=true \\
+  --set ingress.host=gateway.yourcompany.com
+
+# Scale deployment
+kubectl scale deployment tecp-gateway --replicas=5`}</code>
+                </pre>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Cloud VPC</h3>
-              <p className="text-sm text-gray-600">Isolated cloud deployment</p>
             </div>
+
+            {/* Fly.io Deployment */}
+            <div className="border border-gray-200 rounded-lg">
+              <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                <h3 className="font-semibold text-gray-900">Fly.io</h3>
+                <p className="text-sm text-gray-600">Global edge deployment</p>
+              </div>
+              <div className="p-4">
+                <pre className="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto">
+                  <code>{`# Deploy to Fly.io
+flyctl apps create tecp-gateway
+flyctl secrets set OPENAI_API_KEY=sk-...
+flyctl secrets set JWT_SECRET=your-secret-key
+flyctl deploy
+
+# Scale globally
+flyctl scale count 3
+flyctl regions add fra lax nrt`}</code>
+                </pre>
+              </div>
+            </div>
+
+            {/* On-Premise */}
+            <div className="border border-gray-200 rounded-lg">
+              <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                <h3 className="font-semibold text-gray-900">On-Premise</h3>
+                <p className="text-sm text-gray-600">Self-hosted with systemd</p>
+              </div>
+              <div className="p-4">
+                <pre className="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto">
+                  <code>{`# Clone and build
+git clone https://github.com/resetroot99/tecp.git
+cd tecp/services/tecp-gateway
+npm install && npm run build
+
+# Create systemd service
+sudo cp tecp-gateway.service /etc/systemd/system/
+sudo systemctl enable tecp-gateway
+sudo systemctl start tecp-gateway`}</code>
+                </pre>
+              </div>
+            </div>
+
           </div>
+        </div>
+      </div>
+
+      {/* Call to Action */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-8 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Ready to Deploy?</h2>
+        <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
+          Get started with the open-source TECP Gateway or request an enterprise pilot program 
+          with dedicated support and custom compliance configurations.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="https://github.com/resetroot99/tecp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+          >
+            Deploy Gateway (Open Source)
+          </a>
+          <a
+            href="mailto:sudo@hxcode.xyz?subject=TECP Enterprise Pilot Request&body=Hi, I'm interested in piloting the TECP Enterprise Gateway for my organization."
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+          >
+            Request Enterprise Pilot
+          </a>
         </div>
       </div>
     </div>

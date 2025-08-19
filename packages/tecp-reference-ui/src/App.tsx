@@ -31,6 +31,9 @@ import { ThreatModel } from './pages/ThreatModel';
 import { TestVectors } from './pages/TestVectors';
 import { SpecIndex } from './pages/SpecIndex';
 import { Gateway } from './pages/Gateway';
+import { GatewayHealthcare } from './pages/GatewayHealthcare';
+import { GatewayFinance } from './pages/GatewayFinance';
+import { GatewayLegal } from './pages/GatewayLegal';
 import { NotFound } from './pages/NotFound';
 import './styles/reference.css';
 
@@ -44,6 +47,9 @@ function App() {
           <Route path="/examples" element={<Examples />} />
           <Route path="/policies" element={<Policies />} />
           <Route path="/gateway" element={<Gateway />} />
+          <Route path="/gateway/healthcare" element={<GatewayHealthcare />} />
+          <Route path="/gateway/finance" element={<GatewayFinance />} />
+          <Route path="/gateway/legal" element={<GatewayLegal />} />
           <Route path="/log" element={<TransparencyLog />} />
           <Route path="/spec" element={<SpecIndex />} />
           <Route path="/spec/protocol" element={<ProtocolSpec />} />
