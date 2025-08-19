@@ -116,57 +116,144 @@ curl -X POST https://gateway.tecp.dev/v1/chat/completions \\
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6">
-          <div className="mb-3">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">TECP Enterprise Gateway</h1>
-            <p className="text-blue-700 font-medium text-lg">Transform any LLM API into a compliance-grade service</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
+        <div className="relative container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-6">
+              <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
+              Enterprise-Grade AI Compliance
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              TECP Enterprise
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"> Gateway</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Transform any LLM API into a compliance-grade service with automatic policy enforcement, 
+              PII detection, and cryptographic receipts. <strong>Zero code changes required.</strong>
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <button className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <span className="flex items-center justify-center gap-2">
+                  Try Interactive Demo
+                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
+              </button>
+              <button className="group bg-white text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-gray-300">
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  View Documentation
+                </span>
+              </button>
+            </div>
           </div>
-          <p className="text-gray-700 leading-relaxed">
-            Drop-in replacement for OpenAI/Anthropic APIs with automatic policy enforcement, 
-            PII detection, and cryptographic receipts. Zero code changes required.
-          </p>
         </div>
       </div>
 
+      <div className="container mx-auto px-4 pb-16">
+
       {/* Key Features */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">Transparent Proxy</h3>
-          <p className="text-gray-600 text-sm mb-4">
-            Drop-in replacement for OpenAI and Anthropic APIs. No code changes required - just update your base URL.
+      <div className="mb-20">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Enterprise-Grade Features</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Built for production environments with enterprise security, compliance, and scalability requirements
           </p>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li>• OpenAI GPT-4, GPT-3.5 support</li>
-            <li>• Anthropic Claude support</li>
-            <li>• Format conversion handled automatically</li>
-          </ul>
         </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Transparent Proxy</h3>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                Drop-in replacement for OpenAI and Anthropic APIs. No code changes required - just update your base URL.
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  OpenAI GPT-4, GPT-3.5 support
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Anthropic Claude support
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Format conversion handled automatically
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">Policy Enforcement</h3>
-          <p className="text-gray-600 text-sm mb-4">
-            Automatic application of privacy policies with runtime validation and cryptographic receipts.
-          </p>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li>• Real-time policy validation</li>
-            <li>• Cryptographic receipt generation</li>
-            <li>• Transparency log integration</li>
-          </ul>
-        </div>
+          <div className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-green-200 transform hover:-translate-y-2">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Policy Enforcement</h3>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                Automatic application of privacy policies with runtime validation and cryptographic receipts.
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Real-time policy validation
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Cryptographic receipt generation
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Transparency log integration
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">PII Protection</h3>
-          <p className="text-gray-600 text-sm mb-4">
-            Automatic detection of sensitive data with optional redaction before processing.
-          </p>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li>• Email, phone, SSN detection</li>
-            <li>• Medical ID recognition</li>
-            <li>• Configurable redaction rules</li>
-          </ul>
+          <div className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-purple-200 transform hover:-translate-y-2">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">PII Protection</h3>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                Automatic detection of sensitive data with optional redaction before processing.
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Email, phone, SSN detection
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Medical ID recognition
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Configurable redaction rules
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -199,22 +286,45 @@ curl -X POST https://gateway.tecp.dev/v1/chat/completions \\
       </div>
 
       {/* Try It Section */}
-      <div className="mb-8">
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">Try It Now</h2>
-          <p className="text-gray-600">Test the gateway with a sample request and verify the cryptographic receipt</p>
+      <div className="mb-20">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 rounded-full text-sm font-medium mb-4">
+            <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+            Interactive Demo
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Try It Now</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Test the gateway with a sample request and verify the cryptographic receipt in real-time
+          </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Sample Request */}
-          <div className="bg-white border border-gray-200 rounded-lg">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Sample Gateway Request</h3>
-              <p className="text-sm text-gray-600">Example API call with TECP policy enforcement</p>
-            </div>
-            <div className="p-6">
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-                <code>{`curl -X POST https://gateway.tecp.dev/v1/chat/completions \\
+          <div className="relative">
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-25"></div>
+            <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden">
+              <div className="bg-gradient-to-r from-gray-800 to-gray-900 px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  </div>
+                  <div className="text-gray-400 text-sm font-mono">gateway-demo.sh</div>
+                </div>
+              </div>
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">Sample Gateway Request</h3>
+                </div>
+                <p className="text-gray-600 mb-6">Healthcare AI with HIPAA compliance and cryptographic receipts</p>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-xl overflow-x-auto text-sm leading-relaxed">
+                  <code>{`curl -X POST https://gateway.tecp.dev/v1/chat/completions \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer $OPENAI_API_KEY" \\
   -H "x-tecp-api-key: demo-key" \\
@@ -245,90 +355,166 @@ curl -X POST https://gateway.tecp.dev/v1/chat/completions \\
     "transparency_log_entry": "log_entry_xyz789"
   }
 }`}</code>
-              </pre>
+                </pre>
+              </div>
             </div>
           </div>
 
           {/* Receipt Viewer */}
-          <div>
-            <ReceiptViewer onReceiptVerified={handleReceiptVerified} />
-            
-            {/* Download Proof Button */}
-            {currentReceipt && (
-              <div className="mt-4">
-                <button
-                  onClick={handleDownloadProof}
-                  className="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 flex items-center justify-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Download Proof (PDF)
-                </button>
-              </div>
-            )}
+          <div className="relative">
+            <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl blur opacity-25"></div>
+            <div className="relative">
+              <ReceiptViewer onReceiptVerified={handleReceiptVerified} />
+              
+              {/* Download Proof Button */}
+              {currentReceipt && (
+                <div className="mt-6">
+                  <button
+                    onClick={handleDownloadProof}
+                    className="group w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  >
+                    <span className="flex items-center justify-center gap-3">
+                      <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Download Compliance Proof
+                      <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
+                    </span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Enterprise Use Cases */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <a href="/gateway/healthcare" className="bg-white border border-gray-200 rounded-lg p-6 hover:border-blue-300 hover:shadow-md transition-all">
-          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-            <div className="w-6 h-6 bg-blue-600 rounded"></div>
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Healthcare</h3>
-          <p className="text-gray-600 text-sm mb-4">
-            HIPAA-compliant AI processing with automatic PHI detection and cryptographic audit trails.
+      <div className="mb-20">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Industry Solutions</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Specialized compliance solutions for healthcare, finance, and legal industries
           </p>
-          <ul className="space-y-2 text-sm text-gray-700 mb-4">
-            <li>• HIPAA 164.312 compliance</li>
-            <li>• Automatic PHI detection</li>
-            <li>• Cryptographic receipts</li>
-            <li>• Complete audit trails</li>
-          </ul>
-          <div className="text-blue-600 text-sm font-medium">
-            Learn more about Healthcare Gateway →
-          </div>
-        </a>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <a href="/gateway/healthcare" className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Healthcare</h3>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                HIPAA-compliant AI processing with automatic PHI detection and cryptographic audit trails.
+              </p>
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                  HIPAA 164.312 compliance
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                  Automatic PHI detection
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                  Cryptographic receipts
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                  Complete audit trails
+                </div>
+              </div>
+              <div className="flex items-center text-blue-600 font-semibold group-hover:gap-3 transition-all">
+                Learn more about Healthcare Gateway
+                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
+            </div>
+          </a>
 
-        <a href="/gateway/finance" className="bg-white border border-gray-200 rounded-lg p-6 hover:border-green-300 hover:shadow-md transition-all">
-          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-            <div className="w-6 h-6 bg-green-600 rounded"></div>
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Financial Services</h3>
-          <p className="text-gray-600 text-sm mb-4">
-            SOX-compliant AI analysis with complete audit trails and data governance controls.
-          </p>
-          <ul className="space-y-2 text-sm text-gray-700 mb-4">
-            <li>• SOX Section 404 compliance</li>
-            <li>• Financial data protection</li>
-            <li>• Regulatory reporting</li>
-            <li>• Risk management controls</li>
-          </ul>
-          <div className="text-green-600 text-sm font-medium">
-            Learn more about Finance Gateway →
-          </div>
-        </a>
+          <a href="/gateway/finance" className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-green-200 transform hover:-translate-y-2">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Financial Services</h3>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                SOX-compliant AI analysis with complete audit trails and data governance controls.
+              </p>
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  SOX Section 404 compliance
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Financial data protection
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Regulatory reporting
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Risk management controls
+                </div>
+              </div>
+              <div className="flex items-center text-green-600 font-semibold group-hover:gap-3 transition-all">
+                Learn more about Finance Gateway
+                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
+            </div>
+          </a>
 
-        <a href="/gateway/legal" className="bg-white border border-gray-200 rounded-lg p-6 hover:border-purple-300 hover:shadow-md transition-all">
-          <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-            <div className="w-6 h-6 bg-purple-600 rounded"></div>
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Legal</h3>
-          <p className="text-gray-600 text-sm mb-4">
-            Client-confidential AI processing with GDPR compliance and verifiable data handling.
-          </p>
-          <ul className="space-y-2 text-sm text-gray-700 mb-4">
-            <li>• GDPR Article 17 compliance</li>
-            <li>• Client confidentiality</li>
-            <li>• Verifiable processing</li>
-            <li>• Data sovereignty controls</li>
-          </ul>
-          <div className="text-purple-600 text-sm font-medium">
-            Learn more about Legal Gateway →
-          </div>
-        </a>
+          <a href="/gateway/legal" className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-purple-200 transform hover:-translate-y-2">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Legal</h3>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                Client-confidential AI processing with GDPR compliance and verifiable data handling.
+              </p>
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                  GDPR Article 17 compliance
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                  Client confidentiality
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                  Verifiable processing
+                </div>
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                  Data sovereignty controls
+                </div>
+              </div>
+              <div className="flex items-center text-purple-600 font-semibold group-hover:gap-3 transition-all">
+                Learn more about Legal Gateway
+                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
+            </div>
+          </a>
+        </div>
       </div>
 
       {/* Deployment Options */}
@@ -455,6 +641,7 @@ sudo systemctl start tecp-gateway`}</code>
             Request Enterprise Pilot
           </a>
         </div>
+      </div>
       </div>
     </div>
   );
