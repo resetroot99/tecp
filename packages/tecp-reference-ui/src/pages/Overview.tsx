@@ -75,7 +75,7 @@ curl -X POST http://localhost:3001/v1/chat/completions \\
       </section>
 
       <section className="section" style={{ backgroundColor: '#f8fafc', padding: '2rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-        <h2 className="section-title" style={{ color: '#1e40af' }}>🚀 Enterprise Gateway: Zero-Code AI Compliance</h2>
+        <h2 className="section-title" style={{ color: '#1e40af' }}>Enterprise Gateway: Zero-Code AI Compliance</h2>
         <p style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>
           <strong>Transform any LLM API into a compliance-grade service with cryptographic receipts.</strong>
         </p>
