@@ -29,6 +29,7 @@ const navigation = [
   { path: '/', label: 'Overview' },
   { path: '/verify', label: 'Verify' },
   { path: '/examples', label: 'Examples' },
+  { path: '/gateway', label: 'Enterprise Gateway' },
   { path: '/spec', label: 'Specs' },
   { path: '/policies', label: 'Policies' },
   { path: '/log', label: 'Log' },

@@ -30,6 +30,7 @@ import { ProtocolSpec } from './pages/ProtocolSpec';
 import { ThreatModel } from './pages/ThreatModel';
 import { TestVectors } from './pages/TestVectors';
 import { SpecIndex } from './pages/SpecIndex';
+import { Gateway } from './pages/Gateway';
 import { NotFound } from './pages/NotFound';
 import './styles/reference.css';
 
@@ -42,6 +43,7 @@ function App() {
           <Route path="/verify" element={<Verify />} />
           <Route path="/examples" element={<Examples />} />
           <Route path="/policies" element={<Policies />} />
+          <Route path="/gateway" element={<Gateway />} />
           <Route path="/log" element={<TransparencyLog />} />
           <Route path="/spec" element={<SpecIndex />} />
           <Route path="/spec/protocol" element={<ProtocolSpec />} />

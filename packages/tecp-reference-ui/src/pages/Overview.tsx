@@ -74,6 +74,66 @@ curl -X POST http://localhost:3001/v1/chat/completions \\
         </p>
       </section>
 
+      <section className="section" style={{ backgroundColor: '#f8fafc', padding: '2rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+        <h2 className="section-title" style={{ color: '#1e40af' }}>🚀 Enterprise Gateway: Zero-Code AI Compliance</h2>
+        <p style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>
+          <strong>Transform any LLM API into a compliance-grade service with cryptographic receipts.</strong>
+        </p>
+        <p>
+          The TECP Enterprise Gateway acts as a transparent proxy for OpenAI, Anthropic, and other LLM providers, 
+          automatically enforcing privacy policies, detecting PII, and generating cryptographic receipts for every request.
+        </p>
+        <div style={{ 
+          backgroundColor: '#1e40af', 
+          color: 'white', 
+          padding: '1rem', 
+          borderRadius: '6px', 
+          fontFamily: 'monospace',
+          fontSize: '0.9rem',
+          margin: '1rem 0'
+        }}>
+          {`# Zero-code integration - just change your base URL!
+export OPENAI_API_BASE_URL=https://gateway.tecp.dev/v1
+export TECP_API_KEY=your-tecp-key
+
+# Same API calls, now with cryptographic receipts!`}
+        </div>
+        <p>
+          <strong>Perfect for:</strong> Healthcare (HIPAA), Finance (SOX), Legal (GDPR), and any enterprise requiring 
+          AI compliance with cryptographic audit trails.
+        </p>
+        <div style={{ marginTop: '1.5rem' }}>
+          <a 
+            href="/gateway" 
+            style={{ 
+              backgroundColor: '#1e40af', 
+              color: 'white', 
+              padding: '0.75rem 1.5rem', 
+              borderRadius: '6px', 
+              textDecoration: 'none',
+              fontWeight: 'bold',
+              marginRight: '1rem'
+            }}
+          >
+            View Live Gateway Dashboard →
+          </a>
+          <a 
+            href="/examples" 
+            style={{ 
+              backgroundColor: 'transparent', 
+              color: '#1e40af', 
+              padding: '0.75rem 1.5rem', 
+              borderRadius: '6px', 
+              textDecoration: 'none',
+              border: '2px solid #1e40af',
+              fontWeight: 'bold'
+            }}
+          >
+            Try Interactive Examples
+          </a>
+        </div>
+      </section>
+
       <section className="section">
         <h2 className="section-title">Receipt Object</h2>
         <p>
