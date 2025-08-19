@@ -1,0 +1,44 @@
+{
+  "name": "@tecp/ledger",
+  "version": "0.1.0",
+  "description": "TECP Transparency Ledger - Append-only log with Merkle tree proofs",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "tecp",
+    "transparency-log",
+    "merkle-tree",
+    "append-only",
+    "cryptographic-proofs"
+  ],
+  "author": "Ali Jakvani",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+
+    "@noble/ed25519": "^2.0.0",
+    "@noble/hashes": "^1.3.3",
+    "dotenv": "^16.3.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+
+    "typescript": "^5.3.3",
+    "tsx": "^4.6.2",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

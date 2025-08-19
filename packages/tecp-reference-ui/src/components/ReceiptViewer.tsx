@@ -13,11 +13,14 @@ interface ReceiptViewerProps {
   onReceiptVerified?: (receipt: any, isValid: boolean) => void;
 }
 
+const LEDGER_URL = process.env.REACT_APP_LEDGER_URL || 'http://localhost:3001';
+
 export function ReceiptViewer({ onReceiptVerified }: ReceiptViewerProps) {
   const [receiptJson, setReceiptJson] = useState('');
   const [verificationResult, setVerificationResult] = useState<any>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [checkLedger, setCheckLedger] = useState(false);
 
   const sampleReceipt = {
     "receipt_id": "rcpt_abc123def456",
@@ -86,6 +89,45 @@ export function ReceiptViewer({ onReceiptVerified }: ReceiptViewerProps) {
       });
 
       const result = await response.json();
+      
+      // Add ledger verification if requested
+      if (checkLedger && receipt.anchors?.log_seq) {
+        try {
+          const proofResponse = await fetch(`${LEDGER_URL}/proof/inclusion?seq=${receipt.anchors.log_seq}`);
+          if (proofResponse.ok) {
+            const proof = await proofResponse.json();
+            result.ledger_verification = {
+              anchored: true,
+              sequence: receipt.anchors.log_seq,
+              tree_size: proof.tree_size,
+              root_matches: proof.tree_head.root_hash === receipt.anchors.log_root,
+              tree_head: proof.tree_head,
+              audit_path_length: proof.audit_path.length
+            };
+            
+            if (!result.ledger_verification.root_matches) {
+              result.valid = false;
+              result.ledger_verification.error = 'Tree head root mismatch';
+            }
+          } else {
+            result.ledger_verification = {
+              anchored: false,
+              error: `Failed to fetch inclusion proof: ${proofResponse.status}`
+            };
+          }
+        } catch (ledgerError) {
+          result.ledger_verification = {
+            anchored: false,
+            error: ledgerError instanceof Error ? ledgerError.message : 'Ledger verification failed'
+          };
+        }
+      } else if (checkLedger && !receipt.anchors?.log_seq) {
+        result.ledger_verification = {
+          anchored: false,
+          error: 'Receipt not anchored to ledger (no log_seq found)'
+        };
+      }
+      
       setVerificationResult(result);
       onReceiptVerified?.(receipt, result.valid);
 
@@ -153,6 +195,19 @@ export function ReceiptViewer({ onReceiptVerified }: ReceiptViewerProps) {
             </div>
           )}
 
+          {/* Options */}
+          <div className="mb-4">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={checkLedger}
+                onChange={(e) => setCheckLedger(e.target.checked)}
+                className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <span className="text-sm text-gray-700">Verify ledger inclusion (requires anchored receipt)</span>
+            </label>
+          </div>
+
           {/* Verify Button */}
           <button
             onClick={handleVerifyReceipt}
@@ -197,6 +252,42 @@ export function ReceiptViewer({ onReceiptVerified }: ReceiptViewerProps) {
                     ))}
                   </div>
                 </div>
+
+                {/* Ledger Verification */}
+                {verificationResult.ledger_verification && (
+                  <div>
+                    <h5 className="text-sm font-medium text-gray-700 mb-2">Ledger Verification</h5>
+                    <div className="space-y-2 text-sm">
+                      {verificationResult.ledger_verification.anchored ? (
+                        <>
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                            <span>Receipt anchored to transparency ledger</span>
+                          </div>
+                          <div className="ml-4 space-y-1 text-xs text-gray-600">
+                            <div>Sequence: #{verificationResult.ledger_verification.sequence}</div>
+                            <div>Tree size: {verificationResult.ledger_verification.tree_size}</div>
+                            <div>Audit path: {verificationResult.ledger_verification.audit_path_length} hashes</div>
+                            <div className="flex items-center gap-1">
+                              <span>Root match:</span>
+                              <span className={verificationResult.ledger_verification.root_matches ? 'text-green-600' : 'text-red-600'}>
+                                {verificationResult.ledger_verification.root_matches ? '✓' : '✗'}
+                              </span>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                          <span>Not anchored to ledger</span>
+                          {verificationResult.ledger_verification.error && (
+                            <span className="text-red-600 text-xs">({verificationResult.ledger_verification.error})</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* Compliance Status */}
                 {verificationResult.compliance_status && (

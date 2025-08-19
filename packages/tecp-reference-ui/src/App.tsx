@@ -27,6 +27,7 @@ import { Verify } from './pages/Verify';
 import { Examples } from './pages/Examples';
 import { Policies } from './pages/Policies';
 import { TransparencyLog } from './pages/TransparencyLog';
+import { Ledger } from './pages/Ledger';
 import { ProtocolSpec } from './pages/ProtocolSpec';
 import { ThreatModel } from './pages/ThreatModel';
 import { TestVectors } from './pages/TestVectors';
@@ -53,6 +54,7 @@ function App() {
           <Route path="/gateway/finance" element={<GatewayFinance />} />
           <Route path="/gateway/legal" element={<GatewayLegal />} />
           <Route path="/log" element={<TransparencyLog />} />
+          <Route path="/ledger" element={<Ledger />} />
           <Route path="/spec" element={<SpecIndex />} />
           <Route path="/spec/protocol" element={<ProtocolSpec />} />
           <Route path="/spec/threat-model" element={<ThreatModel />} />

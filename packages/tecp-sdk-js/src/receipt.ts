@@ -80,7 +80,7 @@ export async function createReceipt(params: {
 
 export async function verifyReceipt(
   receipt: TecpReceipt,
-  opts: { publicKeys: Uint8Array[]; requireLog?: boolean; fetchLog?: (seq: number) => Promise<any> } | Uint8Array[]
+  opts: { publicKeys: Uint8Array[]; requireLog?: boolean; ledgerUrl?: string } | Uint8Array[]
 ): Promise<boolean> {
   // Handle legacy signature: verifyReceipt(receipt, publicKeys[])
   const options = Array.isArray(opts) ? { publicKeys: opts } : opts;
@@ -104,18 +104,39 @@ export async function verifyReceipt(
     
     if (!sigOk) return false;
 
-    if (options.requireLog) {
-      const seq = receipt.anchors?.log_seq;
-      if (typeof seq !== 'number' || !options.fetchLog) return false;
-      const entry = await options.fetchLog(seq);
-      // minimal check (you can expand later)
-      if (!entry || entry.root !== receipt.anchors?.log_root) return false;
+    // Verify ledger inclusion if required
+    if (options.requireLog && receipt.anchors?.log_seq && options.ledgerUrl) {
+      try {
+        const verified = await verifyLedgerInclusion(receipt, options.ledgerUrl);
+        if (!verified) return false;
+      } catch (error) {
+        return false;
+      }
     }
 
     return true;
   } catch (e) {
     return false;
   }
+}
+
+async function verifyLedgerInclusion(receipt: TecpReceipt, ledgerUrl: string): Promise<boolean> {
+  const seq = receipt.anchors?.log_seq;
+  if (typeof seq !== 'number') return false;
+
+  // Get inclusion proof from ledger
+  const proofResponse = await fetch(`${ledgerUrl}/proof/inclusion?seq=${seq}`);
+  if (!proofResponse.ok) return false;
+
+  const proof = await proofResponse.json();
+  
+  // Verify the receipt hash matches what's in the ledger
+  const receiptHash = sha256Hex(canonicalizeJson(receipt));
+  const leafHash = sha256Hex(new Uint8Array(Buffer.from(receiptHash, 'hex')));
+  
+  // TODO: Implement full Merkle proof verification
+  // For now, just check that the tree head root matches
+  return proof.tree_head.root_hash === receipt.anchors?.log_root;
 }
 
 

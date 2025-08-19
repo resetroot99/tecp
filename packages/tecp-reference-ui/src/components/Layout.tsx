@@ -31,6 +31,7 @@ const navigation = [
   { path: '/verify', label: 'Verify' },
   { path: '/examples', label: 'Examples' },
   { path: '/gateway', label: 'Enterprise Gateway' },
+  { path: '/ledger', label: 'Ledger' },
   { path: '/spec', label: 'Specs' },
   { path: '/policies', label: 'Policies' },
   { path: '/log', label: 'Log' },

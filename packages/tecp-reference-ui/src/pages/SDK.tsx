@@ -228,7 +228,7 @@ const body = result.text; // original response`}</code>
         <div className="bg-white border border-gray-200 rounded-lg p-6">
           <div className="mb-4">
             <p className="text-gray-600 mb-4">
-              Add a beautiful "Powered by TECP" badge to show users your app issues verifiable receipts.
+              Add a "Powered by TECP" badge to show users your app issues verifiable receipts.
               <strong className="text-red-600"> Never sign in the browser - verification only!</strong>
             </p>
             
