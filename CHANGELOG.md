@@ -1,4 +1,4 @@
-## vX.Y.0 — Verifiable Receipts & Unified Log API
+## v0.2.0 — Verifiable Receipts & Unified Log API
 
 ### Added
 - **Deterministic receipts (JSON-C14N)** with `leaf = sha256(canonical_receipt_bytes)` for transparency proofs.
