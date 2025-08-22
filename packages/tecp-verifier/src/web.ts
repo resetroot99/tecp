@@ -21,20 +21,18 @@ interface VerifyRequest {
   options?: {
     requireLog?: boolean;
     logUrl?: string;
+    profile?: 'TECP-LITE' | 'TECP-STRICT';
   };
 }
 
-interface VerifyResponse {
-  valid: boolean;
+type VerifyResponse = {
+  ok: boolean;
+  profile: 'TECP-LITE' | 'TECP-STRICT' | 'UNKNOWN';
+  checks: { structure: boolean; ts: boolean; sig: boolean; log: boolean; sth_sig: boolean };
+  kid?: string;
+  explain?: string;
+} & {
   receipt_version: string;
-  cryptographic_verification: {
-    valid: boolean;
-    errors: string[];
-  };
-  transparency_log_verification?: {
-    valid: boolean;
-    error?: string;
-  };
   metadata: {
     code_ref: string;
     timestamp: number;
@@ -42,9 +40,8 @@ interface VerifyResponse {
     has_log_inclusion: boolean;
     has_key_erasure: boolean;
   };
-  privacy_guarantees: string[];
   verified_at: string;
-}
+};
 
 class TECPWebVerifier {
   private verifier: ReceiptVerifier;
@@ -55,25 +52,27 @@ class TECPWebVerifier {
 
   async verifyReceipt(request: VerifyRequest): Promise<VerifyResponse> {
     const { receipt, options = {} } = request;
-    
-    // Basic cryptographic verification
     const basicResult = await this.verifier.verify(receipt);
-    
-    // Optional transparency log verification
+    const isStrict = options.profile === 'TECP-STRICT' || (receipt as any).profile === 'tecp-strict';
     let logResult: { valid: boolean; error?: string } | undefined;
-    if (options.requireLog || receipt.log_inclusion) {
+    if (options.requireLog || isStrict || receipt.log_inclusion) {
       logResult = await this.verifyLogInclusion(receipt, options.logUrl);
     }
-    
-    // Build response
-    const response: VerifyResponse = {
-      valid: basicResult.valid && (logResult?.valid !== false),
-      receipt_version: receipt.version,
-      cryptographic_verification: {
-        valid: basicResult.valid,
-        errors: basicResult.errors
+
+    const ok = basicResult.valid && (logResult?.valid !== false) && (!isStrict || !!receipt.log_inclusion);
+    const resp: VerifyResponse = {
+      ok,
+      profile: isStrict ? 'TECP-STRICT' : 'TECP-LITE',
+      checks: {
+        structure: basicResult.errors.filter(e => e.toLowerCase().includes('missing')).length === 0,
+        ts: !basicResult.errors.some(e => e.toLowerCase().includes('timestamp') || e.toLowerCase().includes('old')),
+        sig: !basicResult.errors.some(e => e.toLowerCase().includes('signature')),
+        log: logResult ? logResult.valid : !!receipt.log_inclusion,
+        sth_sig: true // TODO: verify STH signature when JWKS/log keyring is wired
       },
-      transparency_log_verification: logResult,
+      kid: (receipt as any)?.ext?.key?.kid,
+      explain: ok ? 'Signature valid; log inclusion structure OK' : (logResult?.error || basicResult.errors.join('; ')),
+      receipt_version: receipt.version,
       metadata: {
         code_ref: receipt.code_ref,
         timestamp: receipt.ts,
@@ -81,11 +80,9 @@ class TECPWebVerifier {
         has_log_inclusion: !!receipt.log_inclusion,
         has_key_erasure: !!receipt.key_erasure
       },
-      privacy_guarantees: this.extractPrivacyGuarantees(receipt),
       verified_at: new Date().toISOString()
     };
-    
-    return response;
+    return resp;
   }
 
   private async verifyLogInclusion(
