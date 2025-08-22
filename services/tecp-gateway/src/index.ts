@@ -50,6 +50,15 @@ app.use('/admin', authMiddleware, adminRouter);
 app.use('/v1', authMiddleware, proxyRouter); // OpenAI-compatible endpoint
 app.use('/api/v1', authMiddleware, proxyRouter); // Alternative endpoint
 
+// JWKS for gateway signing key (if provided)
+app.get('/.well-known/tecp-gateway-jwks', (req, res) => {
+  const pub = process.env.TECP_PUBLIC_KEY; // optional base64 public key
+  const kid = process.env.TECP_KID;
+  if (!pub || !kid) return res.status(503).json({ error: 'gateway JWKS unavailable' });
+  const x = pub.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  res.json({ keys: [{ kty: 'OKP', crv: 'Ed25519', x, kid }] });
+});
+
 // Error handling
 app.use((error: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   logger.error('Gateway error:', error);
@@ -74,6 +83,7 @@ const server = app.listen(config.PORT, () => {
   logger.info(`📊 Admin dashboard: http://localhost:${config.PORT}/admin/dashboard`);
   logger.info(`🔐 Policy enforcement: ${config.POLICY_ENFORCEMENT_ENABLED ? 'ENABLED' : 'DISABLED'}`);
   logger.info(`📝 Receipt generation: ${config.RECEIPT_GENERATION_ENABLED ? 'ENABLED' : 'DISABLED'}`);
+  logger.info(`🧭 TECP profile: ${config.TECP_PROFILE}`);
 });
 
 // Graceful shutdown
