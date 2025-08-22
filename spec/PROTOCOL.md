@@ -35,6 +35,24 @@ Receipt {
   pubkey: string (Ed25519 public key, base64)
 }
 ```
+## Canonicalization
+
+All TECP signatures MUST use JSON-C14N canonicalization:
+
+- Objects: keys sorted ascending by UTF-8
+- Numbers: integers only (floats forbidden)
+- Strings: UTF-8 JSON encoding
+- Binary fields: base64url without padding
+- Output: compact JSON (no spaces, no trailing newline)
+
+The canonical bytes are produced by `canonicalBytes(obj)` and used as the signature body. The transparency log leaf for a receipt is defined as:
+
+```
+leaf = sha256(canonical_receipt_bytes)
+```
+
+This rule is frozen to ensure cross-SDK interoperability and verifiability.
+
 
 ### 2.2 Field Definitions
 
