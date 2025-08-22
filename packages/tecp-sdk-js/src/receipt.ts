@@ -1,6 +1,8 @@
 import { TecpReceipt } from './types';
 import { sha256Hex, canonicalizeJson } from './canon';
 import * as ed25519 from '@noble/ed25519';
+import { verifyAuditPath, bytesToHex } from './merkle';
+import { Keyring } from './keyring';
 
 export interface Signer {
   kid: string;
@@ -80,7 +82,8 @@ export async function createReceipt(params: {
 
 export async function verifyReceipt(
   receipt: TecpReceipt,
-  opts: { publicKeys: Uint8Array[]; requireLog?: boolean; ledgerUrl?: string } | Uint8Array[]
+  opts: { publicKeys?: Uint8Array[]; keyringUrl?: string; requireLog?: boolean; ledgerUrl?: string }
+    | Uint8Array[]
 ): Promise<boolean> {
   // Handle legacy signature: verifyReceipt(receipt, publicKeys[])
   const options = Array.isArray(opts) ? { publicKeys: opts } : opts;
@@ -91,7 +94,14 @@ export async function verifyReceipt(
     const data = new TextEncoder().encode(canon);
 
     const kid = sig.kid;
-    const targetKey = options.publicKeys.find((pk) => kidFromPublicKey(pk) === kid);
+    let targetKey: Uint8Array | undefined;
+    if (options.publicKeys && options.publicKeys.length > 0) {
+      targetKey = options.publicKeys.find((pk) => kidFromPublicKey(pk) === kid);
+    }
+    if (!targetKey && options['keyringUrl']) {
+      const kr = await Keyring.fromJWKS(options['keyringUrl']);
+      targetKey = kr.get(kid);
+    }
     if (!targetKey) return false;
 
     const raw = Buffer.from(sig.sig.replace(/-/g, '+').replace(/_/g, '/'), 'base64');
@@ -104,12 +114,17 @@ export async function verifyReceipt(
     
     if (!sigOk) return false;
 
-    // Verify ledger inclusion if required
-    if (options.requireLog && receipt.anchors?.log_seq && options.ledgerUrl) {
+    // Strict log inclusion if requested and receipt provides inclusion extension
+    if (options.requireLog && receipt.ext && (receipt as any).log_inclusion) {
       try {
-        const verified = await verifyLedgerInclusion(receipt, options.ledgerUrl);
-        if (!verified) return false;
-      } catch (error) {
+        const li: any = (receipt as any).log_inclusion;
+        if (!li || !li.proof || !li.leaf_index || !li.sth || !li.sth.root) return false;
+        const unsigned = { ...receipt } as any;
+        delete unsigned.sig;
+        const leafBytes = new TextEncoder().encode(canonicalizeJson(unsigned));
+        const ok = verifyAuditPath(leafBytes, li.proof, li.leaf_index, li.sth.root);
+        if (!ok) return false;
+      } catch {
         return false;
       }
     }

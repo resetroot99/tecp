@@ -51,6 +51,9 @@ app.get('/', (req, res) => {
       entry: 'GET /entry/:seq',
       treehead: 'GET /treehead/latest',
       inclusion_proof: 'GET /proof/inclusion?seq=N',
+      unified_append: 'POST /v1/log/entries',
+      unified_proof: 'GET /v1/log/proof',
+      unified_sth: 'GET /v1/log/sth',
       feed: 'GET /feed.ndjson'
     }
   });
@@ -152,6 +155,75 @@ app.get('/proof/inclusion', async (req, res) => {
   } catch (error) {
     console.error('Get inclusion proof error:', error);
     res.status(500).json({ error: 'Failed to generate inclusion proof' });
+  }
+});
+
+// Unified API: POST /v1/log/entries -> {leaf_index, proof[], sth{size,root,sig,kid}, algo, domain}
+app.post('/v1/log/entries', async (req, res) => {
+  try {
+    const { leaf } = req.body || {};
+    if (!leaf || typeof leaf !== 'string' || !/^([0-9a-f]{64}|0x[0-9a-f]{64})$/i.test(leaf)) {
+      return res.status(400).json({ error: 'leaf must be 32-byte hex string' });
+    }
+    const hex = leaf.startsWith('0x') ? leaf.slice(2) : leaf;
+    const result = await ledger.append({ leaf_hash: hex });
+    const proof = await ledger.getInclusionProof(result.seq);
+    const sth = await ledger.getLatestTreeHead();
+    if (!proof || !sth) return res.status(500).json({ error: 'Failed to produce proof/STH' });
+    res.json({
+      leaf_index: proof.leaf_index,
+      proof: proof.audit_path,
+      sth: { size: sth.size, root: sth.root_hash, sig: sth.signature, kid: sth.kid },
+      algo: 'sha256',
+      domain: { leaf: '00', node: '01' }
+    });
+  } catch (error) {
+    console.error('Unified append error:', error);
+    res.status(500).json({ error: 'append failed' });
+  }
+});
+
+// Unified API: GET /v1/log/proof?leaf=<hex>
+app.get('/v1/log/proof', async (req, res) => {
+  try {
+    const leaf = String(req.query.leaf || '');
+    if (!/^([0-9a-f]{64}|0x[0-9a-f]{64})$/i.test(leaf)) {
+      return res.status(400).json({ error: 'leaf must be 32-byte hex string' });
+    }
+    const hex = leaf.startsWith('0x') ? leaf.slice(2) : leaf;
+    // Reverse map: linear scan for in-memory store
+    let seq: number | null = null;
+    for (let i = 1; ; i++) {
+      const entry = ledger.getEntry(i);
+      if (!entry) break;
+      if (entry.leaf_hash.toLowerCase() === hex.toLowerCase()) { seq = i; break; }
+    }
+    if (!seq) return res.status(404).json({ error: 'leaf not found' });
+    const proof = await ledger.getInclusionProof(seq);
+    const sth = await ledger.getLatestTreeHead();
+    if (!proof || !sth) return res.status(500).json({ error: 'proof/STH unavailable' });
+    res.json({
+      leaf_index: proof.leaf_index,
+      proof: proof.audit_path,
+      sth: { size: sth.size, root: sth.root_hash, sig: sth.signature, kid: sth.kid },
+      algo: 'sha256',
+      domain: { leaf: '00', node: '01' }
+    });
+  } catch (error) {
+    console.error('Unified proof error:', error);
+    res.status(500).json({ error: 'proof failed' });
+  }
+});
+
+// Unified API: GET /v1/log/sth
+app.get('/v1/log/sth', async (req, res) => {
+  try {
+    const sth = await ledger.getLatestTreeHead();
+    if (!sth) return res.status(404).json({ error: 'no STH' });
+    res.json({ size: sth.size, root: sth.root_hash, sig: sth.signature, kid: sth.kid });
+  } catch (error) {
+    console.error('Unified sth error:', error);
+    res.status(500).json({ error: 'sth failed' });
   }
 });
 

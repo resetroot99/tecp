@@ -182,6 +182,65 @@ export class TransparencyLog {
     });
   }
 
+  // New: Add entry using precomputed leaf hash (hex) for unified API
+  async addEntryLeaf(leafHashHex: string): Promise<{ leaf_index: number; root: string; proof: MerkleProof }> {
+    const timestamp = Date.now();
+    const leafHash = leafHashHex.toLowerCase();
+
+    return new Promise((resolve, reject) => {
+      const self = this;
+      this.db.serialize(() => {
+        this.db.run('BEGIN TRANSACTION');
+        this.db.run(
+          'INSERT INTO entries (code_ref, receipt_hash, timestamp, leaf_hash) VALUES (?, ?, ?, ?)',
+          ['', '', timestamp, leafHash],
+          async function(err: Error | null) {
+            if (err) {
+              self.db.run('ROLLBACK');
+              reject(err);
+              return;
+            }
+            const leafIndex = this.lastID as number;
+            try {
+              const {root, proof} = await self.rebuildTree(leafIndex);
+              self.db.run('COMMIT', (commitErr) => {
+                if (commitErr) {
+                  reject(commitErr);
+                } else {
+                  resolve({ leaf_index: leafIndex, root, proof });
+                }
+              });
+            } catch (error) {
+              self.db.run('ROLLBACK');
+              reject(error);
+            }
+          }
+        );
+      });
+    });
+  }
+
+  async findLeafIndexByHash(leafHashHex: string): Promise<number | null> {
+    return new Promise((resolve, reject) => {
+      const hash = leafHashHex.toLowerCase();
+      this.db.get(
+        'SELECT leaf_index FROM entries WHERE leaf_hash = ? LIMIT 1',
+        [hash],
+        (err, row: any) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          if (!row) {
+            resolve(null);
+            return;
+          }
+          resolve(row.leaf_index as number);
+        }
+      );
+    });
+  }
+
   async getProof(leafIndex: number): Promise<MerkleProof | null> {
     return new Promise((resolve, reject) => {
       // Get the specific leaf
@@ -248,6 +307,12 @@ export class TransparencyLog {
         }
       );
     });
+  }
+
+  // Helper to expose current STH as unified shape
+  async getUnifiedSTH(): Promise<{ size: number; root: string; sig: string; kid: string }>{
+    const sth = await this.getCurrentRoot();
+    return { size: sth.tree_size, root: sth.root_hash, sig: sth.signature, kid: sth.kid || this.currentKid };
   }
 
   private async rebuildTree(newLeafIndex: number): Promise<{root: string; proof: MerkleProof}> {
@@ -523,6 +588,74 @@ const LOG_PUBLIC_KEY = Buffer.from(process.env.LOG_PUBLIC_KEY, 'base64');
 
 const DB_PATH = process.env.DB_PATH || './tecp.db';
 const log = new TransparencyLog(DB_PATH, LOG_PRIVATE_KEY, LOG_PUBLIC_KEY);
+
+// Unified endpoints mounted on primary app/log
+app.post('/v1/log/entries', async (req, res) => {
+  try {
+    const { leaf } = req.body || {};
+    if (!leaf || typeof leaf !== 'string' || !/^([0-9a-f]{64}|0x[0-9a-f]{64})$/i.test(leaf)) {
+      return res.status(400).json({ error: 'leaf must be 32-byte hex string' });
+    }
+    const hex = leaf.startsWith('0x') ? leaf.slice(2) : leaf;
+    const result = await log.addEntryLeaf(hex);
+    const sth = await log.getUnifiedSTH();
+    res.json({
+      leaf_index: result.leaf_index,
+      proof: result.proof.audit_path,
+      sth,
+      algo: 'sha256',
+      domain: { leaf: '00', node: '01' }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'append failed' });
+  }
+});
+
+app.get('/v1/log/proof', async (req, res) => {
+  try {
+    const leaf = String(req.query.leaf || '');
+    if (!/^([0-9a-f]{64}|0x[0-9a-f]{64})$/i.test(leaf)) {
+      return res.status(400).json({ error: 'leaf must be 32-byte hex string' });
+    }
+    const hex = leaf.startsWith('0x') ? leaf.slice(2) : leaf;
+    const idx = await log.findLeafIndexByHash(hex);
+    if (idx === null) return res.status(404).json({ error: 'leaf not found' });
+    const proof = await log.getProof(idx);
+    const sth = await log.getUnifiedSTH();
+    if (!proof) return res.status(404).json({ error: 'proof unavailable' });
+    res.json({
+      leaf_index: proof.leaf_index,
+      proof: proof.audit_path,
+      sth,
+      algo: 'sha256',
+      domain: { leaf: '00', node: '01' }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'proof failed' });
+  }
+});
+
+app.get('/v1/log/sth', async (req, res) => {
+  try {
+    const sth = await log.getUnifiedSTH();
+    res.json(sth);
+  } catch (error) {
+    res.status(500).json({ error: 'sth failed' });
+  }
+});
+
+// JWKS endpoint for log STH signing key
+app.get('/.well-known/tecp-log-jwks', (req, res) => {
+  try {
+    const b64 = process.env.LOG_PUBLIC_KEY || '';
+    if (!b64) return res.status(503).json({ error: 'public key unavailable' });
+    const b64url = b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+    const kid = process.env.LOG_KEY_ID || log['currentKid'] || 'log-current';
+    res.json({ keys: [{ kty: 'OKP', crv: 'Ed25519', x: b64url, kid }] });
+  } catch (e) {
+    res.status(500).json({ error: 'jwks failed' });
+  }
+});
 
 // API Routes
 
