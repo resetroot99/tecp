@@ -35,8 +35,12 @@ export type { PolicyEnforcer, PolicyContext, PolicyResult } from './policy-runti
 
 // Constants
 export const TECP_VERSION = 'TECP-0.1';
-export const MAX_RECEIPT_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
 export const MAX_CLOCK_SKEW_MS = 5 * 60 * 1000; // 5 minutes
 export const MAX_RECEIPT_SIZE_BYTES = 8192; // 8KB
 export const PERFORMANCE_TARGET_CREATE_MS = 10;
 export const PERFORMANCE_TARGET_VERIFY_MS = 5;
+
+// Canonicalization and leaf hashing
+export { canonicalBytes, canonicalJSONString, toBase64Url, fromBase64Url } from './c14n.js';
+export { leafForLog } from './leaf.js';
+export { SKEW_LITE_MS, SKEW_STRICT_MS, MAX_RECEIPT_AGE_MS } from './constants.js';
