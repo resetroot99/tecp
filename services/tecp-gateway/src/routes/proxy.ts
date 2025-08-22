@@ -5,14 +5,16 @@
 
 import { Router } from 'express';
 import axios from 'axios';
-import { ReceiptSigner, PolicyRuntime } from '@tecp/core';
+import { ReceiptSigner, PolicyRuntime, canonicalBytes, leafForLog } from '@tecp/core';
 import { config } from '../config';
 import { logger } from '../utils/logger';
 import { PIIDetector } from '../utils/piiDetector';
 import { TransparencyLogClient } from '../utils/transparencyLog';
 
 const router = Router();
-const receiptSigner = new ReceiptSigner();
+// Initialize signer with optional private key for deterministic KID
+const gatewayPrivateKey = process.env.TECP_PRIVATE_KEY ? Buffer.from(process.env.TECP_PRIVATE_KEY, 'base64') : undefined as any;
+const receiptSigner = new ReceiptSigner(gatewayPrivateKey);
 const policyRuntime = new PolicyRuntime();
 const piiDetector = new PIIDetector();
 const transparencyLog = new TransparencyLogClient(config.TRANSPARENCY_LOG_URL);
@@ -125,39 +127,31 @@ router.post('/chat/completions', async (req, res) => {
     // Generate TECP receipt
     let tecpReceipt = null;
     if (config.RECEIPT_GENERATION_ENABLED) {
-      const receiptData = await receiptSigner.createReceipt({
+      const receipt = await receiptSigner.createReceipt({
+        code_ref: process.env.TECP_CODE_REF || 'unknown',
         input: processedInput,
         output: outputContent,
-        policies,
-        metadata: {
-          model: proxyReq.model,
-          user_id: userId,
-          session_id: sessionId,
-          request_id: requestId,
-          processing_time_ms: Date.now() - startTime,
-          pii_detected: piiDetected,
-          provider: getProviderFromModel(proxyReq.model)
-        }
+        policy_ids: policies,
+        profile: config.TECP_PROFILE === 'STRICT' ? 'tecp-strict' : 'tecp-lite',
+        extensions: { ext: { key: { kid: process.env.TECP_KID } } }
       });
 
-      tecpReceipt = {
-        receipt_id: receiptData.receipt_id,
-        input_hash: receiptData.input_hash,
-        output_hash: receiptData.output_hash,
-        policy_ids: policies,
-        timestamp: receiptData.timestamp,
-        signature: receiptData.signature
-      };
-
-      // Submit to transparency log
-      if (config.TRANSPARENCY_LOG_ENABLED) {
+      // Optional anchoring in STRICT
+      if (config.TECP_PROFILE === 'STRICT' && config.TRANSPARENCY_LOG_ENABLED) {
         try {
-          const logEntry = await transparencyLog.submitReceipt(receiptData);
-          tecpReceipt.transparency_log_entry = logEntry.entry_id;
+          const leaf = Buffer.from(leafForLog(receipt)).toString('hex');
+          const anchor = await axios.post(`${config.TRANSPARENCY_LOG_URL}/v1/log/entries`, { leaf });
+          (receipt as any).log_inclusion = {
+            leaf_index: anchor.data.leaf_index,
+            merkle_proof: anchor.data.proof,
+            log_root: anchor.data.sth.root
+          };
         } catch (error) {
-          logger.warn('Failed to submit to transparency log', { error, requestId });
+          logger.warn('Anchoring failed', { error: error instanceof Error ? error.message : String(error) });
         }
       }
+
+      tecpReceipt = receipt;
     }
 
     // Construct enhanced response

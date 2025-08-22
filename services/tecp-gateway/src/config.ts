@@ -26,6 +26,9 @@ const configSchema = z.object({
   // TECP Configuration
   POLICY_ENFORCEMENT_ENABLED: z.string().transform(s => s === 'true').default('true'),
   RECEIPT_GENERATION_ENABLED: z.string().transform(s => s === 'true').default('true'),
+  TECP_PROFILE: z.enum(['LITE', 'STRICT']).default('LITE'),
+  TECP_PRIVATE_KEY: z.string().optional(), // base64
+  TECP_KID: z.string().optional(),
   DEFAULT_POLICIES: z.string().transform(s => s.split(',')).default('no_retention,audit_trail'),
   
   // Transparency Log

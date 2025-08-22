@@ -18,6 +18,11 @@ router.get('/', (req, res) => {
       receipt_generation: config.RECEIPT_GENERATION_ENABLED,
       pii_detection: config.PII_DETECTION_ENABLED,
       transparency_log: config.TRANSPARENCY_LOG_ENABLED
+    },
+    tecp: {
+      profile: config.TECP_PROFILE,
+      kid: process.env.TECP_KID || null,
+      log_url: config.TRANSPARENCY_LOG_URL
     }
   });
 });
