@@ -10,6 +10,8 @@ import { sign, verify, getPublicKey, utils, etc } from '@noble/ed25519';
 import { sha256 } from '@noble/hashes/sha256';
 import { sha512 } from '@noble/hashes/sha512';
 import type { Receipt, FullReceipt, CreateReceiptParams, VerificationResult } from './types.js';
+import { SKEW_LITE_MS, SKEW_STRICT_MS, MAX_RECEIPT_AGE_MS } from './constants.js';
+import { canonicalBytes, toBase64Url, fromBase64Url } from './c14n.js';
 
 // Set up SHA-512 for Ed25519 (required for @noble/ed25519)
 etc.sha512Sync = (...m) => sha512(etc.concatBytes(...m));
@@ -44,13 +46,13 @@ export class ReceiptSigner {
       pubkey: Buffer.from(this.publicKey).toString('base64')
     };
 
-    // Deterministic CBOR encoding for signing (critical for interoperability)
-    const sigInput = this.canonicalCBOR(core);
+    // JSON-C14N canonicalization for signing
+    const sigInput = canonicalBytes(core);
     const signature = await sign(sigInput, this.privateKey);
 
     const receipt: Receipt = {
       ...core,
-      sig: Buffer.from(signature).toString('base64')
+      sig: toBase64Url(signature)
     };
 
     // Add extensions without affecting signature
@@ -100,7 +102,8 @@ export class ReceiptSigner {
   }
 
   private sha256b64(data: Buffer): string {
-    return Buffer.from(sha256(data)).toString('base64');
+    const digest = sha256(data);
+    return toBase64Url(new Uint8Array(digest));
   }
 
   /**
@@ -133,7 +136,10 @@ export class ReceiptVerifier {
         await this.validateSignature(receipt, errors);
       }
 
-      // 4. Optional: verify log inclusion if present
+      // 4. Enforce profile rules (STRICT)
+      this.validateProfileRules(receipt, errors);
+
+      // 5. Optional: verify log inclusion if present
       if ('log_inclusion' in receipt && receipt.log_inclusion) {
         await this.validateLogInclusion(receipt as FullReceipt, errors, warnings);
       }
@@ -152,6 +158,17 @@ export class ReceiptVerifier {
       errors,
       warnings: warnings.length > 0 ? warnings : undefined
     };
+  }
+
+  private validateProfileRules(receipt: Receipt | FullReceipt, errors: string[]): void {
+    const isStrict = (receipt as any).profile === 'tecp-strict';
+    if (!isStrict) return;
+    if (!Array.isArray(receipt.policy_ids) || receipt.policy_ids.length === 0) {
+      errors.push('STRICT profile requires non-empty policy_ids');
+    }
+    if (!(receipt as any).log_inclusion) {
+      errors.push('STRICT profile requires log_inclusion');
+    }
   }
 
   private validateStructure(receipt: Receipt | FullReceipt, errors: string[]): void {
@@ -177,11 +194,10 @@ export class ReceiptVerifier {
       errors.push('policy_ids must be an array');
     }
 
-    // Validate base64 fields strictly
-    const isValidBase64 = (s: unknown): boolean => {
+    // Validate base64url fields (no padding)
+    const isBase64Url = (s: unknown): boolean => {
       if (typeof s !== 'string') return false;
-      if (s.length === 0 || s.length % 4 !== 0) return false;
-      return /^[A-Za-z0-9+/]+={0,2}$/.test(s);
+      return /^[A-Za-z0-9_-]+$/.test(s);
     };
     const base64Fields: Array<[string, string]> = [
       ['nonce', (receipt as any).nonce],
@@ -190,32 +206,26 @@ export class ReceiptVerifier {
       ['pubkey', (receipt as any).pubkey],
     ];
     base64Fields.forEach(([name, val]) => {
-      if (!isValidBase64(val)) {
-        errors.push(`Invalid base64 encoding for field: ${name}`);
+      if (!isBase64Url(val)) {
+        errors.push(`Invalid base64url encoding for field: ${name}`);
       }
     });
-    // Signature: if not base64, treat as a signature failure to preserve interop expectations
-    if (!isValidBase64((receipt as any).sig)) {
-      errors.push('Signature verification failed');
+    if (!isBase64Url((receipt as any).sig)) {
+      errors.push('Invalid base64url encoding for field: sig');
     }
   }
 
   private validateTimestamp(receipt: Receipt | FullReceipt, errors: string[], warnings: string[]): void {
     const now = Date.now();
-    const MAX_AGE = 24 * 60 * 60 * 1000; // 24 hours
-    const MAX_SKEW = 5 * 60 * 1000;      // 5 minutes
-    
-    if (now - receipt.ts > MAX_AGE) {
-      errors.push('Receipt too old (>24 hours)');
-    }
-    
-    if (receipt.ts > now + MAX_SKEW) {
-      errors.push('Receipt timestamp in future (>5 minutes)');
-    }
+    const maxAge = MAX_RECEIPT_AGE_MS;
+    const profile = (receipt as any).profile === 'tecp-strict' ? 'strict' : 'lite';
+    const maxSkew = profile === 'strict' ? SKEW_STRICT_MS : SKEW_LITE_MS;
 
-    // Warning for receipts older than 1 hour
-    if (now - receipt.ts > 60 * 60 * 1000) {
-      warnings.push(`Receipt is ${Math.round((now - receipt.ts) / (60 * 60 * 1000))} hours old`);
+    if (now - receipt.ts > maxAge) {
+      errors.push('Receipt too old');
+    }
+    if (receipt.ts > now + maxSkew) {
+      errors.push('Receipt timestamp in future');
     }
   }
 
@@ -224,10 +234,10 @@ export class ReceiptVerifier {
       // Extract core receipt (signed fields only) - remove extensions
       const { sig, key_erasure, environment, log_inclusion, ...core } = receipt as any;
       
-      // Recreate the signed payload with deterministic CBOR
-      const sigInput = this.canonicalCBOR(core);
-      const signature = Buffer.from(receipt.sig, 'base64');
-      const publicKey = Buffer.from(receipt.pubkey, 'base64');
+      // Recreate the signed payload with JSON-C14N
+      const sigInput = canonicalBytes(core);
+      const signature = fromBase64Url(receipt.sig);
+      const publicKey = fromBase64Url(receipt.pubkey);
       
       const signatureValid = await verify(signature, sigInput, publicKey);
       if (!signatureValid) {
@@ -250,9 +260,7 @@ export class ReceiptVerifier {
       return;
     }
 
-    // TODO: Implement actual Merkle proof verification
-    // For now, just validate structure
-    warnings.push('Log inclusion proof structure valid, but verification not yet implemented');
+    // Merkle proof verification is performed in SDKs/web verifier. Here we only validate structure.
   }
 
   private canonicalCBOR(obj: any): Uint8Array {
