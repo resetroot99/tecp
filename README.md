@@ -166,6 +166,50 @@ curl -X POST http://localhost:3001/v1/chat/completions \
 
 > **Note**: These are development URLs. For production deployment, see the [deployment guide](OPERATIONS.md).
 
+## TECP: Integrate in 5 Minutes
+
+### 1) Run the Gateway (server)
+```bash
+export TECP_PROFILE=STRICT                # or LITE
+export TECP_PRIVATE_KEY="$(cat ./keys/gw_ed25519)"
+export TECP_KID="vpn-usw2-2025-08"        # rotate regularly
+export TECP_LOG_URL="https://log.example.com"
+node services/tecp-gateway/dist/index.js  # serves /.well-known/tecp-gateway-jwks
+```
+
+### 2) Anchor (STRICT only)
+
+Gateway POSTs canonical leaf to:
+
+```
+POST https://log.example.com/v1/log/entries
+-> { leaf_index, proof[], sth{size,root,sig,kid}, algo:"sha256", domain:{leaf:"00",node:"01"} }
+```
+
+### 3) Verify in your App (client)
+
+```bash
+npm i @tecp/sdk-js
+```
+
+```ts
+import { verifyReceipt } from "@tecp/sdk-js";
+import { Keyring } from "@tecp/sdk-js/keyring";
+
+const logKeys = await Keyring.fromJWKS("https://log.example.com/.well-known/tecp-log-jwks");
+const result = await verifyReceipt(receipt, { logKeys });
+if (result.ok) {
+  const label = result.profile === "TECP-STRICT" ? "Verified (Public)" : "Verified (Local)";
+  renderBadge(label);
+}
+```
+
+### 4) Transparency Log Endpoints
+- POST /v1/log/entries – append & return proof + STH
+- GET /v1/log/proof?leaf=HEX – fetch proof by leaf
+- GET /v1/log/sth – latest signed tree head
+- GET /.well-known/tecp-log-jwks – log pubkey(s) for STH verification
+
 ## 📁 Architecture Overview
 
 ```
