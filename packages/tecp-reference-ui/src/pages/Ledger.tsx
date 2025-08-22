@@ -27,7 +27,7 @@ interface TreeHead {
   public_key: string;
 }
 
-const LEDGER_URL = process.env.REACT_APP_LEDGER_URL || 'http://localhost:3001';
+const LEDGER_URL = process.env.REACT_APP_LEDGER_URL || 'https://tecp.dev/ledger';
 
 export function Ledger() {
   const [treeHead, setTreeHead] = useState<TreeHead | null>(null);
@@ -92,10 +92,10 @@ export function Ledger() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading transparency ledger...</p>
+      <div className="container">
+        <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+          <div className="spinner" style={{ marginBottom: '1rem' }}></div>
+          <p style={{ color: '#666' }}>Loading transparency ledger...</p>
         </div>
       </div>
     );
