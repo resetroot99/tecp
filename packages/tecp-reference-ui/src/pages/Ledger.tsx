@@ -46,14 +46,14 @@ export function Ledger() {
       setLoading(true);
       
       // Load latest tree head
-      const sthResponse = await fetch(`${LEDGER_URL}/treehead/latest`);
+      const sthResponse = await fetch(`${LEDGER_URL}/v1/log/sth`);
       if (sthResponse.ok) {
         const sth = await sthResponse.json();
         setTreeHead(sth);
       }
 
       // Load recent entries
-      const entriesResponse = await fetch(`${LEDGER_URL}/entries?limit=100`);
+      const entriesResponse = await fetch(`${LEDGER_URL}/v1/log/entries?limit=100`);
       if (entriesResponse.ok) {
         const entriesData = await entriesResponse.json();
         setEntries(entriesData);
@@ -69,7 +69,7 @@ export function Ledger() {
     if (!searchSeq) return;
     
     try {
-      const response = await fetch(`${LEDGER_URL}/entry/${searchSeq}`);
+      const response = await fetch(`${LEDGER_URL}/v1/log/entry/${searchSeq}`);
       if (response.ok) {
         const entry = await response.json();
         setSearchResult(entry);
@@ -264,7 +264,7 @@ export function Ledger() {
         <div className="card">
           <div className="two-column">
             <a
-              href={`${LEDGER_URL}/feed.ndjson`}
+              href={`${LEDGER_URL}/v1/log/feed.ndjson`}
               target="_blank"
               rel="noopener noreferrer"
               className="button"
@@ -276,7 +276,7 @@ export function Ledger() {
               Download Feed (NDJSON)
             </a>
             <button
-              onClick={() => window.open(`${LEDGER_URL}/treehead/latest`, '_blank')}
+              onClick={() => window.open(`${LEDGER_URL}/v1/log/sth`, '_blank')}
               className="button"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
             >
@@ -293,12 +293,12 @@ export function Ledger() {
       <div className="card" style={{ background: '#f8fafc' }}>
         <h2 className="section-title">API Endpoints</h2>
         <div className="code-block">
-          <div><strong>GET</strong> {LEDGER_URL}/ - Ledger info</div>
-          <div><strong>POST</strong> {LEDGER_URL}/append - Append entry</div>
-          <div><strong>GET</strong> {LEDGER_URL}/entry/:seq - Get entry</div>
-          <div><strong>GET</strong> {LEDGER_URL}/treehead/latest - Latest STH</div>
-          <div><strong>GET</strong> {LEDGER_URL}/proof/inclusion?seq=N - Inclusion proof</div>
-          <div><strong>GET</strong> {LEDGER_URL}/feed.ndjson - Public feed</div>
+          <div><strong>GET</strong> {LEDGER_URL}/v1/log/info - Ledger info</div>
+          <div><strong>POST</strong> {LEDGER_URL}/v1/log/entries - Append entry</div>
+          <div><strong>GET</strong> {LEDGER_URL}/v1/log/entry/:seq - Get entry</div>
+          <div><strong>GET</strong> {LEDGER_URL}/v1/log/sth - Latest STH</div>
+          <div><strong>GET</strong> {LEDGER_URL}/v1/log/proof?leaf=HEX - Inclusion proof</div>
+          <div><strong>GET</strong> {LEDGER_URL}/v1/log/feed.ndjson - Public feed</div>
         </div>
       </div>
     </div>
