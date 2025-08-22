@@ -43,7 +43,7 @@ export function Policies() {
 
   useEffect(() => {
     // Load policy registry
-    fetch('http://localhost:3000/policy-registry.json')
+    fetch('/policy-registry.json')
       .then(response => response.json())
       .then(data => {
         setRegistry(data);
