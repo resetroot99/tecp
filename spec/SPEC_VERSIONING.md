@@ -1,7 +1,7 @@
 # TECP Specification Versioning
 
 **Status**: Draft  
-**Version**: 1.0  
+**Version**: 1.1
 **Date**: December 2024
 
 ## Overview
