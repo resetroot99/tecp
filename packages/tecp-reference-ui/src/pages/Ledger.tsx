@@ -102,13 +102,13 @@ export function Ledger() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">TECP Transparency Ledger</h1>
-          <p className="text-blue-700 font-medium text-lg">Public, append-only log with Merkle tree proofs</p>
-          <div className="mt-4 p-4 bg-blue-100 rounded-lg">
-            <p className="text-sm text-blue-800">
+    <div className="container">
+      <div className="section">
+        <div className="card" style={{ background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: '700', margin: '0 0 0.5rem 0' }}>TECP Transparency Ledger</h1>
+          <p style={{ color: '#1e40af', fontWeight: '500', fontSize: '1.125rem', margin: '0 0 1rem 0' }}>Public, append-only log with Merkle tree proofs</p>
+          <div className="alert" style={{ background: '#dbeafe', border: '1px solid #3b82f6', color: '#1e40af' }}>
+            <p style={{ margin: 0 }}>
               <strong>Privacy-preserving:</strong> Only receipt hashes and metadata are stored. 
               No input/output data is ever logged.
             </p>
@@ -117,11 +117,12 @@ export function Ledger() {
       </div>
 
       {error && (
-        <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-800">{error}</p>
+        <div className="alert-error">
+          <p>{error}</p>
           <button 
             onClick={() => setError(null)}
-            className="mt-2 text-sm text-red-600 hover:text-red-800"
+            className="button"
+            style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}
           >
             Dismiss
           </button>
@@ -130,42 +131,24 @@ export function Ledger() {
 
       {/* Tree Head Status */}
       {treeHead && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Latest Signed Tree Head</h2>
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="section">
+          <h2 className="section-title">Latest Signed Tree Head</h2>
+          <div className="card">
+            <div className="two-column">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Tree State</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Size:</span>
-                    <span className="font-mono">{treeHead.size.toLocaleString()} entries</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Root Hash:</span>
-                    <span className="font-mono text-sm">{formatHash(treeHead.root_hash)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Timestamp:</span>
-                    <span className="text-sm">{formatTimestamp(treeHead.timestamp)}</span>
-                  </div>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem' }}>Tree State</h3>
+                <div>
+                  <p><strong>Size:</strong> <span className="code-inline">{treeHead.size.toLocaleString()} entries</span></p>
+                  <p><strong>Root Hash:</strong> <span className="code-inline">{formatHash(treeHead.root_hash)}</span></p>
+                  <p><strong>Timestamp:</strong> {formatTimestamp(treeHead.timestamp)}</p>
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Signature</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Key ID:</span>
-                    <span className="font-mono text-sm">{formatHash(treeHead.kid)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Public Key:</span>
-                    <span className="font-mono text-sm">{formatHash(treeHead.public_key)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Signature:</span>
-                    <span className="font-mono text-sm">{formatHash(treeHead.signature)}</span>
-                  </div>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem' }}>Signature</h3>
+                <div>
+                  <p><strong>Key ID:</strong> <span className="code-inline">{formatHash(treeHead.kid)}</span></p>
+                  <p><strong>Public Key:</strong> <span className="code-inline">{formatHash(treeHead.public_key)}</span></p>
+                  <p><strong>Signature:</strong> <span className="code-inline">{formatHash(treeHead.signature)}</span></p>
                 </div>
               </div>
             </div>
@@ -174,39 +157,43 @@ export function Ledger() {
       )}
 
       {/* Search */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Search Entry</h2>
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <div className="flex gap-4">
-            <input
-              type="number"
-              placeholder="Enter sequence number..."
-              value={searchSeq}
-              onChange={(e) => setSearchSeq(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+      <div className="section">
+        <h2 className="section-title">Search Entry</h2>
+        <div className="card">
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'end' }}>
+            <div className="form-field" style={{ flex: 1, marginBottom: 0 }}>
+              <label className="form-label" htmlFor="search-seq">Sequence Number</label>
+              <input
+                id="search-seq"
+                type="number"
+                placeholder="Enter sequence number..."
+                value={searchSeq}
+                onChange={(e) => setSearchSeq(e.target.value)}
+                className="form-input"
+              />
+            </div>
             <button
               onClick={searchEntry}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="button-primary"
             >
               Search
             </button>
           </div>
           
           {searchResult && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <h3 className="font-semibold text-gray-900 mb-2">Entry #{searchResult.seq}</h3>
-              <div className="space-y-1 text-sm">
-                <div><strong>Hash:</strong> <span className="font-mono">{searchResult.leaf_hash}</span></div>
-                <div><strong>Timestamp:</strong> {formatTimestamp(searchResult.timestamp)}</div>
+            <div className="card" style={{ marginTop: '1rem', background: '#f8fafc' }}>
+              <h3 style={{ margin: '0 0 1rem 0' }}>Entry #{searchResult.seq}</h3>
+              <div>
+                <p><strong>Hash:</strong> <span className="code-inline">{searchResult.leaf_hash}</span></p>
+                <p><strong>Timestamp:</strong> {formatTimestamp(searchResult.timestamp)}</p>
                 {searchResult.policy_ids && (
-                  <div><strong>Policies:</strong> {searchResult.policy_ids.join(', ')}</div>
+                  <p><strong>Policies:</strong> {searchResult.policy_ids.join(', ')}</p>
                 )}
                 {searchResult.kid && (
-                  <div><strong>Key ID:</strong> <span className="font-mono">{formatHash(searchResult.kid)}</span></div>
+                  <p><strong>Key ID:</strong> <span className="code-inline">{formatHash(searchResult.kid)}</span></p>
                 )}
                 {searchResult.created_at && (
-                  <div><strong>Created:</strong> {searchResult.created_at}</div>
+                  <p><strong>Created:</strong> {searchResult.created_at}</p>
                 )}
               </div>
             </div>
@@ -215,47 +202,47 @@ export function Ledger() {
       </div>
 
       {/* Recent Entries */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Recent Entries</h2>
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
+      <div className="section">
+        <h2 className="section-title">Recent Entries</h2>
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <div style={{ overflowX: 'auto' }}>
+            <table className="table">
+              <thead>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seq</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hash</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Policies</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key ID</th>
+                  <th>Seq</th>
+                  <th>Hash</th>
+                  <th>Timestamp</th>
+                  <th>Policies</th>
+                  <th>Key ID</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody>
                 {entries.map((entry) => (
-                  <tr key={entry.seq} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">
+                  <tr key={entry.seq}>
+                    <td className="table-mono">
                       {entry.seq}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">
+                    <td className="table-mono">
                       {formatHash(entry.leaf_hash)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td>
                       {formatTimestamp(entry.timestamp)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td>
                       {entry.policy_ids ? (
-                        <div className="flex flex-wrap gap-1">
+                        <div>
                           {entry.policy_ids.map((policy, i) => (
-                            <span key={i} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                            <span key={i} className="code-inline" style={{ marginRight: '0.25rem', fontSize: '0.75rem' }}>
                               {policy}
                             </span>
                           ))}
                         </div>
                       ) : (
-                        <span className="text-gray-400">-</span>
+                        <span style={{ color: '#999' }}>-</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">
-                      {entry.kid ? formatHash(entry.kid) : <span className="text-gray-400">-</span>}
+                    <td className="table-mono">
+                      {entry.kid ? formatHash(entry.kid) : <span style={{ color: '#999' }}>-</span>}
                     </td>
                   </tr>
                 ))}
@@ -264,7 +251,7 @@ export function Ledger() {
           </div>
           
           {entries.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
               No entries found
             </div>
           )}
@@ -272,26 +259,28 @@ export function Ledger() {
       </div>
 
       {/* Download Links */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Export Data</h2>
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="section">
+        <h2 className="section-title">Export Data</h2>
+        <div className="card">
+          <div className="two-column">
             <a
               href={`${LEDGER_URL}/feed.ndjson`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="button"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', textDecoration: 'none' }}
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="svg-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               Download Feed (NDJSON)
             </a>
             <button
               onClick={() => window.open(`${LEDGER_URL}/treehead/latest`, '_blank')}
-              className="flex items-center justify-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="button"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="svg-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               View Latest STH (JSON)
@@ -301,15 +290,15 @@ export function Ledger() {
       </div>
 
       {/* API Documentation */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">API Endpoints</h2>
-        <div className="space-y-2 text-sm font-mono">
-          <div><span className="text-green-600">GET</span> <span className="text-blue-600">{LEDGER_URL}/</span> - Ledger info</div>
-          <div><span className="text-yellow-600">POST</span> <span className="text-blue-600">{LEDGER_URL}/append</span> - Append entry</div>
-          <div><span className="text-green-600">GET</span> <span className="text-blue-600">{LEDGER_URL}/entry/:seq</span> - Get entry</div>
-          <div><span className="text-green-600">GET</span> <span className="text-blue-600">{LEDGER_URL}/treehead/latest</span> - Latest STH</div>
-          <div><span className="text-green-600">GET</span> <span className="text-blue-600">{LEDGER_URL}/proof/inclusion?seq=N</span> - Inclusion proof</div>
-          <div><span className="text-green-600">GET</span> <span className="text-blue-600">{LEDGER_URL}/feed.ndjson</span> - Public feed</div>
+      <div className="card" style={{ background: '#f8fafc' }}>
+        <h2 className="section-title">API Endpoints</h2>
+        <div className="code-block">
+          <div><strong>GET</strong> {LEDGER_URL}/ - Ledger info</div>
+          <div><strong>POST</strong> {LEDGER_URL}/append - Append entry</div>
+          <div><strong>GET</strong> {LEDGER_URL}/entry/:seq - Get entry</div>
+          <div><strong>GET</strong> {LEDGER_URL}/treehead/latest - Latest STH</div>
+          <div><strong>GET</strong> {LEDGER_URL}/proof/inclusion?seq=N - Inclusion proof</div>
+          <div><strong>GET</strong> {LEDGER_URL}/feed.ndjson - Public feed</div>
         </div>
       </div>
     </div>
