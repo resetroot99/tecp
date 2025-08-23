@@ -22,6 +22,14 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 
+// Handle being mounted at /ledger
+app.use((req, res, next) => {
+  if (req.path.startsWith('/ledger/')) {
+    req.url = req.url.slice('/ledger'.length);
+  }
+  next();
+});
+
 // Request logging
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);

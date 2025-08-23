@@ -1,6 +1,30 @@
 {
+  "version": 2,
   "buildCommand": "npm run build",
+  "installCommand": "npm install",
   "outputDirectory": "packages/tecp-reference-ui/dist",
-  "framework": null,
-  "installCommand": "npm install"
+  "builds": [
+    {
+      "src": "packages/tecp-reference-ui/dist/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "services/tecp-ledger/src/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/ledger/(.*)",
+      "dest": "/services/tecp-ledger/src/index.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/packages/tecp-reference-ui/dist/$1"
+    }
+  ],
+  "env": {
+    "PORT": "3001",
+    "DB_PATH": "/tmp/ledger.db"
+  }
 }
