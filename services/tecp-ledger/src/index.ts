@@ -273,10 +273,18 @@ process.on('SIGTERM', () => {
   process.exit(0);
 });
 
-app.listen(port, () => {
-  console.log(`TECP Transparency Ledger running on port ${port}`);
+// For Vercel serverless functions
+if (process.env.VERCEL) {
+  console.log('Running in Vercel environment');
   console.log(`Public key: ${ledger.getPublicKey()}`);
   console.log(`Key ID: ${ledger.getKid()}`);
-});
+  module.exports = app;
+} else {
+  app.listen(port, () => {
+    console.log(`TECP Transparency Ledger running on port ${port}`);
+    console.log(`Public key: ${ledger.getPublicKey()}`);
+    console.log(`Key ID: ${ledger.getKid()}`);
+  });
+}
 
 export { TransparencyLedger };

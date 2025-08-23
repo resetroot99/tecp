@@ -10,17 +10,22 @@
     },
     {
       "src": "services/tecp-ledger/src/index.ts",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["services/tecp-ledger/src/**"]
+      }
     }
   ],
   "routes": [
     {
       "src": "/ledger/(.*)",
-      "dest": "/services/tecp-ledger/src/index.ts"
+      "dest": "/services/tecp-ledger/src/index.ts",
+      "continue": true
     },
     {
       "src": "/(.*)",
-      "dest": "/packages/tecp-reference-ui/dist/$1"
+      "dest": "/packages/tecp-reference-ui/dist/$1",
+      "continue": true
     }
   ],
   "env": {
