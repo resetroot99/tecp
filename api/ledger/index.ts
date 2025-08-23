@@ -5,7 +5,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import { TransparencyLedger } from './ledger.js';
+import { TransparencyLedger } from './ledger';
 import { config } from 'dotenv';
 
 config();
