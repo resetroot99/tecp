@@ -7,24 +7,12 @@
     {
       "src": "packages/tecp-reference-ui/dist/**",
       "use": "@vercel/static"
-    },
-    {
-      "src": "api/ledger.js",
-      "use": "@vercel/node@3.0.0"
     }
   ],
   "routes": [
     {
-      "src": "/ledger/(.*)",
-      "dest": "/api/ledger"
-    },
-    {
       "src": "/(.*)",
       "dest": "/packages/tecp-reference-ui/dist/$1"
     }
-  ],
-  "env": {
-    "PORT": "3001",
-    "DB_PATH": "/tmp/ledger.db"
-  }
+  ]
 }
