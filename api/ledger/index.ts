@@ -22,6 +22,14 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 
+// Skip Vercel auth for API routes
+app.use((req, res, next) => {
+  if (req.headers['x-vercel-deployment-url']) {
+    return next();
+  }
+  next();
+});
+
 // Handle being mounted at /ledger
 app.use((req, res, next) => {
   if (req.path.startsWith('/ledger/')) {
