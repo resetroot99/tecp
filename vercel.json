@@ -4,7 +4,7 @@
   "installCommand": "npm install",
   "outputDirectory": "packages/tecp-reference-ui/dist",
   "functions": {
-    "services/tecp-ledger/src/index.ts": {
+    "api/ledger/index.ts": {
       "memory": 1024,
       "maxDuration": 10
     }
@@ -12,7 +12,7 @@
   "rewrites": [
     {
       "source": "/ledger/(.*)",
-      "destination": "/services/tecp-ledger/src/index.ts"
+      "destination": "/api/ledger"
     },
     {
       "source": "/(.*)",
