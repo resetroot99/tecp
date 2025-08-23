@@ -10,6 +10,7 @@
 import { useState } from 'react';
 import { ReceiptViewer } from '../components/ReceiptViewer';
 import { exportReceiptToPDF } from '../utils/pdfExport';
+import '../styles/gateway.css';
 
 export function Gateway() {
   const [demoCode, setDemoCode] = useState('javascript');
@@ -116,170 +117,164 @@ curl -X POST https://gateway.tecp.dev/v1/chat/completions \\
   };
 
   return (
-    <div className="gateway-page min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="gateway-page">
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
-        <div className="relative container mx-auto px-4 py-16">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-6">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
-              Enterprise-Grade AI Compliance
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              TECP Enterprise
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"> Gateway</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Transform any LLM API into a compliance-grade service with automatic policy enforcement, 
-              PII detection, and cryptographic receipts. <strong>Zero code changes required.</strong>
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <a href="#try-it" className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <span className="flex items-center justify-center gap-2">
-                  Try Interactive Demo
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </span>
-              </a>
-              <a href="https://github.com/resetroot99/tecp/tree/main/services/tecp-gateway#readme" target="_blank" rel="noopener noreferrer" className="group bg-white text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-gray-300">
-                <span className="flex items-center justify-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  View Documentation
-                </span>
-              </a>
-            </div>
+      <div className="gateway-hero">
+        <div className="gateway-hero-content">
+          <div className="gateway-badge">
+            <div className="gateway-badge-dot"></div>
+            Enterprise-Grade AI Compliance
+          </div>
+          <h1 className="gateway-title">
+            TECP Enterprise
+            <span className="gateway-title-highlight"> Gateway</span>
+          </h1>
+          <p className="gateway-description">
+            Transform any LLM API into a compliance-grade service with automatic policy enforcement, 
+            PII detection, and cryptographic receipts. <strong>Zero code changes required.</strong>
+          </p>
+          <div className="gateway-buttons">
+            <a href="#try-it" className="gateway-button gateway-button-primary">
+              <span>
+                Try Interactive Demo
+                <svg className="svg-icon-sm gateway-arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
+            </a>
+            <a href="https://github.com/resetroot99/tecp/tree/main/services/tecp-gateway#readme" target="_blank" rel="noopener noreferrer" className="gateway-button gateway-button-secondary">
+              <span>
+                <svg className="svg-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                View Documentation
+              </span>
+            </a>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 pb-16">
+      <div className="container">
 
       {/* Key Features */}
-      <div id="try-it" className="mb-20">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Enterprise-Grade Features</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+      <div id="try-it" className="gateway-features">
+        <div className="gateway-features-header">
+          <h2 className="gateway-features-title">Enterprise-Grade Features</h2>
+          <p className="gateway-features-description">
             Built for production environments with enterprise security, compliance, and scalability requirements
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative">
-              <div className="icon-badge icon-badge--blue mb-4 group-hover:scale-105 transition-transform duration-300">
+        <div className="gateway-features-grid">
+          <div className="gateway-feature-card">
+            <div className="gateway-feature-content">
+              <div className="gateway-feature-icon gateway-feature-icon--blue">
                 <svg className="svg-icon text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Transparent Proxy</h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <h3 className="gateway-feature-title">Transparent Proxy</h3>
+              <p className="gateway-feature-description">
                 Drop-in replacement for OpenAI and Anthropic APIs. No code changes required - just update your base URL.
               </p>
-              <div className="space-y-3">
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+              <ul className="gateway-feature-list">
+                <li className="gateway-feature-list-item">
+                  <div className="gateway-feature-list-dot gateway-feature-list-dot--blue"></div>
                   OpenAI GPT-4, GPT-3.5 support
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                </li>
+                <li className="gateway-feature-list-item">
+                  <div className="gateway-feature-list-dot gateway-feature-list-dot--blue"></div>
                   Anthropic Claude support
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                </li>
+                <li className="gateway-feature-list-item">
+                  <div className="gateway-feature-list-dot gateway-feature-list-dot--blue"></div>
                   Format conversion handled automatically
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
           </div>
 
-          <div className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-green-200 transform hover:-translate-y-2">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative">
-              <div className="icon-badge icon-badge--green mb-4 group-hover:scale-105 transition-transform duration-300">
+          <div className="gateway-feature-card">
+            <div className="gateway-feature-content">
+              <div className="gateway-feature-icon gateway-feature-icon--green">
                 <svg className="svg-icon text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Policy Enforcement</h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <h3 className="gateway-feature-title">Policy Enforcement</h3>
+              <p className="gateway-feature-description">
                 Automatic application of privacy policies with runtime validation and cryptographic receipts.
               </p>
-              <div className="space-y-3">
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+              <ul className="gateway-feature-list">
+                <li className="gateway-feature-list-item">
+                  <div className="gateway-feature-list-dot gateway-feature-list-dot--green"></div>
                   Real-time policy validation
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                </li>
+                <li className="gateway-feature-list-item">
+                  <div className="gateway-feature-list-dot gateway-feature-list-dot--green"></div>
                   Cryptographic receipt generation
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                </li>
+                <li className="gateway-feature-list-item">
+                  <div className="gateway-feature-list-dot gateway-feature-list-dot--green"></div>
                   Transparency log integration
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
           </div>
 
-          <div className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-purple-200 transform hover:-translate-y-2">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative">
-              <div className="icon-badge icon-badge--purple mb-4 group-hover:scale-105 transition-transform duration-300">
+          <div className="gateway-feature-card">
+            <div className="gateway-feature-content">
+              <div className="gateway-feature-icon gateway-feature-icon--purple">
                 <svg className="svg-icon text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">PII Protection</h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <h3 className="gateway-feature-title">PII Protection</h3>
+              <p className="gateway-feature-description">
                 Automatic detection of sensitive data with optional redaction before processing.
               </p>
-              <div className="space-y-3">
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+              <ul className="gateway-feature-list">
+                <li className="gateway-feature-list-item">
+                  <div className="gateway-feature-list-dot gateway-feature-list-dot--purple"></div>
                   Email, phone, SSN detection
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                </li>
+                <li className="gateway-feature-list-item">
+                  <div className="gateway-feature-list-dot gateway-feature-list-dot--purple"></div>
                   Medical ID recognition
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                </li>
+                <li className="gateway-feature-list-item">
+                  <div className="gateway-feature-list-dot gateway-feature-list-dot--purple"></div>
                   Configurable redaction rules
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
 
       {/* Integration Examples */}
-      <div className="bg-white border border-gray-200 rounded-lg mb-8">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Zero-Code Integration</h2>
-          <p className="text-sm text-gray-600">Drop-in replacement for existing LLM APIs</p>
+      <div className="gateway-code">
+        <div className="gateway-code-header">
+          <h2 className="gateway-code-title">Zero-Code Integration</h2>
+          <p className="gateway-code-description">Drop-in replacement for existing LLM APIs</p>
         </div>
-        <div className="p-6">
-          <div className="flex gap-2 mb-4">
-            {Object.keys(codeExamples).map((lang) => (
-              <button
-                key={lang}
-                onClick={() => setDemoCode(lang)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                  demoCode === lang
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {lang.charAt(0).toUpperCase() + lang.slice(1)}
-              </button>
-            ))}
-          </div>
-          <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+        <div className="gateway-code-tabs">
+          {Object.keys(codeExamples).map((lang) => (
+            <button
+              key={lang}
+              onClick={() => setDemoCode(lang)}
+              className={`gateway-code-tab ${
+                demoCode === lang
+                  ? 'gateway-code-tab--active'
+                  : 'gateway-code-tab--inactive'
+              }`}
+            >
+              {lang.charAt(0).toUpperCase() + lang.slice(1)}
+            </button>
+          ))}
+        </div>
+        <div className="gateway-code-content">
+          <pre className="gateway-code-block">
             <code>{codeExamples[demoCode as keyof typeof codeExamples]}</code>
           </pre>
         </div>
