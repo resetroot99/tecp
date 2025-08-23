@@ -6,7 +6,7 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/resetroot99/tecp)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Protocol](https://img.shields.io/badge/protocol-TECP--0.1-purple)](spec/PROTOCOL.md)
-[![Demo](https://img.shields.io/badge/demo-live-orange)](https://tecp.dev/demo)
+[![Demo](https://img.shields.io/badge/demo-live-orange)](https://tecp.netlify.app)
 
 **TECP is like TLS for computation**—it makes privacy violations mathematically impossible, not just legally prohibited.
 
@@ -107,10 +107,10 @@ curl -X POST http://localhost:3001/v1/chat/completions \
 
 ### 🌐 **Cloud Deployment (Recommended)**
 
-#### Vercel (Automatic)
+#### Netlify (Automatic)
 ```bash
 # Already deployed! Visit the live demo:
-# https://your-vercel-url.vercel.app
+# https://tecp.netlify.app
 ```
 
 #### Fly.io (Production)
