@@ -1,18 +1,15 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
-  "outputDirectory": "packages/tecp-reference-ui/dist",
   "builds": [
     {
-      "src": "packages/tecp-reference-ui/dist/**",
-      "use": "@vercel/static"
+      "src": "server.js",
+      "use": "@vercel/node@3.0.0"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/packages/tecp-reference-ui/dist/$1"
+      "dest": "/server.js"
     }
   ]
 }
