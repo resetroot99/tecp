@@ -16,14 +16,14 @@ module.exports = (req, res) => {
     return;
   }
 
-  const path = req.url.replace('/ledger/', '');
+  const path = req.url.replace('/api/ledger', '');
 
   switch (path) {
-    case 'v1/log/sth':
+    case '/v1/log/sth':
       res.json(mockSth);
       break;
 
-    case 'v1/log/entries':
+    case '/v1/log/entries':
       if (req.method === 'POST') {
         const { leaf } = req.body || {};
         if (!leaf || typeof leaf !== 'string' || !/^([0-9a-f]{64}|0x[0-9a-f]{64})$/i.test(leaf)) {
@@ -47,7 +47,7 @@ module.exports = (req, res) => {
       }
       break;
 
-    case 'v1/log/proof':
+    case '/v1/log/proof':
       const leaf = String(req.query.leaf || '');
       if (!/^([0-9a-f]{64}|0x[0-9a-f]{64})$/i.test(leaf)) {
         res.status(400).json({ error: 'leaf must be 32-byte hex string' });
