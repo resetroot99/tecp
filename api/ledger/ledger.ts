@@ -2,9 +2,9 @@
  * TECP Transparency Ledger Core Logic
  */
 
-import { LedgerDatabase, LogEntry, SignedTreeHead } from './database.js';
-import { TreeHeadSigner } from './signer.js';
-import { merkleTreeHash, generateInclusionProof, InclusionProof } from './merkle.js';
+import { LedgerDatabase, LogEntry, SignedTreeHead } from './database';
+import { TreeHeadSigner } from './signer';
+import { merkleTreeHash, generateInclusionProof, InclusionProof } from './merkle';
 import { bytesToHex } from '@noble/hashes/utils';
 
 export interface AppendRequest {
