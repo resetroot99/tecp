@@ -1,0 +1,15 @@
+{
+  "leaf_index": 1,
+  "proof": ["0000000000000000000000000000000000000000000000000000000000000000"],
+  "sth": {
+    "size": 1,
+    "root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "sig": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "kid": "test-key-1"
+  },
+  "algo": "sha256",
+  "domain": {
+    "leaf": "00",
+    "node": "01"
+  }
+}
