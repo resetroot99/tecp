@@ -27,7 +27,7 @@ interface TreeHead {
   public_key: string;
 }
 
-const LEDGER_URL = process.env.REACT_APP_LEDGER_URL || '/mock-ledger';
+const LEDGER_URL = process.env.REACT_APP_LEDGER_URL || '/api/mock-ledger';
 
 export function Ledger() {
   const [treeHead, setTreeHead] = useState<TreeHead | null>(null);
