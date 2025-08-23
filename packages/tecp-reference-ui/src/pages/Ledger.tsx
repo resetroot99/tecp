@@ -27,7 +27,7 @@ interface TreeHead {
   public_key: string;
 }
 
-const LEDGER_URL = process.env.REACT_APP_LEDGER_URL || '/api/ledger';
+import { mockLedger } from '../utils/mockLedger';
 
 export function Ledger() {
   const [treeHead, setTreeHead] = useState<TreeHead | null>(null);
@@ -46,18 +46,12 @@ export function Ledger() {
       setLoading(true);
       
       // Load latest tree head
-      const sthResponse = await fetch(`${LEDGER_URL}/v1/log/sth`);
-      if (sthResponse.ok) {
-        const sth = await sthResponse.json();
-        setTreeHead(sth);
-      }
+      const sth = await mockLedger.getSTH();
+      setTreeHead(sth);
 
       // Load recent entries
-      const entriesResponse = await fetch(`${LEDGER_URL}/v1/log/entries?limit=100`);
-      if (entriesResponse.ok) {
-        const entriesData = await entriesResponse.json();
-        setEntries(entriesData);
-      }
+      const entries = await mockLedger.getEntries();
+      setEntries(entries);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load ledger data');
     } finally {
@@ -69,9 +63,9 @@ export function Ledger() {
     if (!searchSeq) return;
     
     try {
-      const response = await fetch(`${LEDGER_URL}/v1/log/entry/${searchSeq}`);
-      if (response.ok) {
-        const entry = await response.json();
+      const entries = await mockLedger.getEntries();
+      const entry = entries.find(e => e.seq === parseInt(searchSeq));
+      if (entry) {
         setSearchResult(entry);
       } else {
         setSearchResult(null);
@@ -263,10 +257,17 @@ export function Ledger() {
         <h2 className="section-title">Export Data</h2>
         <div className="card">
           <div className="two-column">
-            <a
-              href={`${LEDGER_URL}/v1/log/feed.ndjson`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => {
+                const entries = mockLedger.getEntries();
+                const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'tecp-ledger-feed.ndjson';
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
               className="button"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', textDecoration: 'none' }}
             >
@@ -274,9 +275,15 @@ export function Ledger() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               Download Feed (NDJSON)
-            </a>
+            </button>
             <button
-              onClick={() => window.open(`${LEDGER_URL}/v1/log/sth`, '_blank')}
+              onClick={async () => {
+                const sth = await mockLedger.getSTH();
+                const blob = new Blob([JSON.stringify(sth, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+                URL.revokeObjectURL(url);
+              }}
               className="button"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
             >
@@ -293,12 +300,12 @@ export function Ledger() {
       <div className="card" style={{ background: '#f8fafc' }}>
         <h2 className="section-title">API Endpoints</h2>
         <div className="code-block">
-          <div><strong>GET</strong> {LEDGER_URL}/v1/log/info - Ledger info</div>
-          <div><strong>POST</strong> {LEDGER_URL}/v1/log/entries - Append entry</div>
-          <div><strong>GET</strong> {LEDGER_URL}/v1/log/entry/:seq - Get entry</div>
-          <div><strong>GET</strong> {LEDGER_URL}/v1/log/sth - Latest STH</div>
-          <div><strong>GET</strong> {LEDGER_URL}/v1/log/proof?leaf=HEX - Inclusion proof</div>
-          <div><strong>GET</strong> {LEDGER_URL}/v1/log/feed.ndjson - Public feed</div>
+          <div><strong>GET</strong> /v1/log/info - Ledger info</div>
+          <div><strong>POST</strong> /v1/log/entries - Append entry</div>
+          <div><strong>GET</strong> /v1/log/entry/:seq - Get entry</div>
+          <div><strong>GET</strong> /v1/log/sth - Latest STH</div>
+          <div><strong>GET</strong> /v1/log/proof?leaf=HEX - Inclusion proof</div>
+          <div><strong>GET</strong> /v1/log/feed.ndjson - Public feed</div>
         </div>
       </div>
     </div>
