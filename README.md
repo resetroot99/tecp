@@ -14,6 +14,10 @@ When applications process sensitive data through third-party services, users mus
 
 The protocol is analogous to TLS for computation: where TLS proves a connection is encrypted, TECP proves data was processed ephemerally.
 
+![TECP Trust Loop](assets/tecp_trust_loop_diagram.webp)
+
+*TECP turns automation into accountable computation through cryptographic verification at each stage.*
+
 ## Key Features
 
 - **Cryptographic Receipts**: Ed25519-signed proofs of ephemeral processing with SHA-256 integrity hashes
